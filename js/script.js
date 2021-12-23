@@ -144,25 +144,27 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
 
     window.addEventListener('scroll', showModalByScroll);           /*  Когда доскроллим страницу до самого низа, откроется модальное окно */
 
+    
+    
     // Классы для карточек
 
-    class MenuCard {
-      constructor(src, alt, title, descr, price, parentSelector) {
-        this.src = src;
+    class MenuCard {                                                /* Создаём экземпляр класса, анализируем верстку, чтобы сделать динамику в ней */
+      constructor(src, alt, title, descr, price, parentSelector) {  /* Помещаем сюда аргументы которые динамически будем встраивать в карточки */
+        this.src = src;                                             /* Присваиваем значения будущих объектов */
         this.alt = alt;
         this.title = title;
         this.descr = descr;
         this.price = price;
-        this.parent = document.querySelector(parentSelector);
-        this.transfer = 27;
-        this.changeToUAH();
+        this.parent = document.querySelector(parentSelector);       
+        this.transfer = 27;                                          /* примерный курс к доллару(в макете гривны) */
+        this.changeToUAH();                                          /* в объект будут поступать цена в долларах, и будет переводится в гривны по курсу */
       }
 
-      changeToUAH() {
+      changeToUAH() {                                                 /* Сам процесс перевода в гривны */
         this.price = this.price * this.transfer;
       }
 
-      render() {
+      render() {                                                      /* Рендер карточек с динамическим контентом */
         const element = document.createElement('div');
         element.innerHTML = `
         <div class="menu__item">
@@ -180,7 +182,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       }
     }    
 
-    new MenuCard(
+    new MenuCard(                                                     /* Объект из которого сформируется карточка на странице как и 2 следующие */
       "img/tabs/vegy.jpg",
       "vegy",
       'Меню "Фитнес"',
