@@ -1,12 +1,12 @@
 window.addEventListener('DOMContentLoaded', () => {
 
   /* Tabs */
-const tabs = document.querySelectorAll('.tabheader__item'),
+const tabs = document.querySelectorAll('.tabheader__item'),                   /* Находим элементы и помещаеи их в переменные */
       tabsContent = document.querySelectorAll('.tabcontent'),
       tabsParent  = document.querySelector ('.tabheader__items');
 
 
-        function hideTabContent() {
+        function hideTabContent() {                                           /* Функция для того чтобы скрыть табы */
           tabsContent.forEach(item => {
             item.classList.add('hide');
             item.classList.remove('show', 'fade');
@@ -16,7 +16,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),
           });
         }
 
-        function showTabContent(i = 0) {
+        function showTabContent(i = 0) {                                      /* Функция для того чтобы показать табы */
             tabsContent[i].classList.add('show', 'fade');
             tabsContent[i].classList.remove('hide');
             tabs[i].classList.add('tabheader__item_active');
@@ -25,7 +25,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),
         hideTabContent();
         showTabContent();
 
-        tabsParent.addEventListener('click', (e) => {
+        tabsParent.addEventListener('click', (e) => {                         /* Событие отлавливающие клик на табе (определяет какой таб открыть, остальные закрывает) */
             const target = e.target;
 
             if(target && target.classList.contains('tabheader__item')) {
