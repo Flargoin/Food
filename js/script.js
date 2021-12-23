@@ -149,13 +149,14 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
     // Классы для карточек
 
     class MenuCard {                                                /* Создаём экземпляр класса, анализируем верстку, чтобы сделать динамику в ней */
-      constructor(src, alt, title, descr, price, parentSelector) {  /* Помещаем сюда аргументы которые динамически будем встраивать в карточки */
+      constructor(src, alt, title, descr, price, parentSelector, ...classes) {  /* Помещаем сюда аргументы которые динамически будем встраивать в карточки и вспомогательные аргументы */
         this.src = src;                                             /* Присваиваем значения будущих объектов */
         this.alt = alt;
         this.title = title;
         this.descr = descr;
         this.price = price;
-        this.parent = document.querySelector(parentSelector);       
+        this.parent = document.querySelector(parentSelector);  
+        this.classes = classes;  
         this.transfer = 27;                                          /* примерный курс к доллару(в макете гривны) */
         this.changeToUAH();                                          /* в объект будут поступать цена в долларах, и будет переводится в гривны по курсу */
       }
@@ -164,10 +165,16 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         this.price = this.price * this.transfer;
       }
 
-      render() {                                                      /* Рендер карточек с динамическим контентом */
-        const element = document.createElement('div');
+      render() {                                                                    /* Рендер карточек с динамическим контентом */                                        
+        const element = document.createElement('div'); 
+
+        if(this.classes.length === 0) {                                             /* Если классов нет, по дефолту нужно подставлять menu__item */
+          this.element = 'menu__item';                                              /* Предположим если класс понадобиться в будущем */
+          element.classList.add(this.element);                                      /* Назначаем сам класс */
+        } else {
+          this.classes.forEach(className => element.classList.add(className));        /* Добавляем все классы попавшие в массив classes */ 
+        }
         element.innerHTML = `
-        <div class="menu__item">
           <img src=${this.src} alt=${this.alt}>
           <h3 class="menu__item-subtitle">${this.title}</h3>
           <div class="menu__item-descr">${this.descr}</div>
@@ -176,7 +183,6 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
               <div class="menu__item-cost">Цена:</div>
               <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
           </div>
-        </div>
         `;
         this.parent.append(element);
       }
@@ -188,7 +194,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       'Меню "Фитнес"',
       'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
       9,
-      ".menu .container"
+      ".menu .container",
     ).render();
 
     new MenuCard(
@@ -197,7 +203,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       'Меню “Премиум”',
       'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
       14,
-      ".menu .container"
+      ".menu .container",
     ).render();
 
     new MenuCard(
@@ -206,7 +212,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       'Меню "Постное"',
       'Меню "Постное" - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
       21,
-      ".menu .container"
+      ".menu .container",
     ).render();
 });
 
