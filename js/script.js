@@ -38,18 +38,20 @@ const tabs = document.querySelectorAll('.tabheader__item'),
             }
         });
 
+        
+        
         /* Timer */
 
-        const deadline = '2022-01-01';
+        const deadline = '2022-01-01';                              /* Определяем дедлайн */
 
-        function getTimeRemaining(endtime) {
-          const t = Date.parse(endtime) - Date.parse(new Date()) ,
-                days = Math.floor(t / (1000 * 60 * 60 * 24)) ,
+        function getTimeRemaining(endtime) {                        /* Функция определяющая разницу между дедлайном и текущим временем */
+          const t = Date.parse(endtime) - Date.parse(new Date()) ,  /* endtime - конечная точка до которой нам нужно досчитать отнимаем текущую дату */
+                days = Math.floor(t / (1000 * 60 * 60 * 24)) ,      /* считаем в милисекундах значения таймера округляя до ближайшего целого(Math.floor)*/
                 hours = Math.floor((t / (1000* 60 * 60) % 24)) ,
                 minutes = Math.floor((t / 1000 / 60) % 60) ,
                 seconds = Math.floor((t / 1000) % 60);
           
-          return {
+          return {                                                  /* Создаём объект и помещаем в него значения из функции getTimeRemaining */
             'total': t,
             'days': days,
             'hours': hours,
@@ -58,7 +60,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),
           };
         }
 
-        function getZero(num) {
+        function getZero(num) {                                     /* Функция создающая двухзначные значения, не 9, а 09 к примеру */
           if (num >= 0 && num < 10) {
             return `0${num}`;
           } else {
@@ -66,32 +68,34 @@ const tabs = document.querySelectorAll('.tabheader__item'),
           }
         }
 
-        function setClock(selector, endtime) {
+        function setClock(selector, endtime) {                     /* Функция для работы самого таймера */    
           const timer = document.querySelector(selector),
                 days = timer.querySelector('#days'),
                 hours = timer.querySelector('#hours'),
                 minutes = timer.querySelector('#minutes'),
                 seconds = timer.querySelector('#seconds'),
-                timeInterval = setInterval(updateClock, 1000);
+                timeInterval = setInterval(updateClock, 1000);     /* Вызываем функцию updateClock каждую секунду (обновление таймера) */
 
-          updateClock();
+          updateClock();                                           /* Обновляем таймер в самом начале чтобы, JS перебил статичную верстку, иначе таймер после загрузки страницы отобразится через секунду из-за setInterval выше */
 
-          function updateClock() {
-            const t = getTimeRemaining(endtime);
+          function updateClock() {                                 /* Функция обновления таймера */
+            const t = getTimeRemaining(endtime);                   /* Помещаем разницу во времени в переменную */
 
-            days.textContent = getZero(t.days);
+            days.textContent = getZero(t.days);                    /* Помещаем полученые из объекта значения с функцией getZero(преоброзование в 2-ух значное число) в сами элементы таймера */
             hours.textContent = getZero(t.hours);
             minutes.textContent = getZero(t.minutes);
             seconds.textContent = getZero(t.seconds);
 
-            if (t.total <= 0) {
+            if (t.total <= 0) {                                     /* Остановка таймера когда время закончилось */
               clearInterval(timeInterval);
             }
           }
         }
 
-    setClock('.timer', deadline);
+    setClock('.timer', deadline);                                   /* вызываем функцию с 2-мя аргументами, селектор самого таймера и дедлайн */
 
+   
+   
     /* Modal */
 
     const modalTrigger = document.querySelectorAll('[data-modal]'), /* Обьявляем в переменные кнопки, само модальное окно, и кнопку для скрытия окна */
@@ -128,13 +132,13 @@ const tabs = document.querySelectorAll('.tabheader__item'),
       }
     });
 
-   /*  const modalTimerId = setTimeout(openModal, 5000);  */              /* Открытие модального окна через определённый промежуток времени */
+     const modalTimerId = setTimeout(openModal, 5000);              /* Открытие модального окна через определённый промежуток времени */
 
     function showModalByScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) { 
-      // PageYOffset - сколько px пользователь отлистал сверху по оси Y + clientHeight - высота видимой части >= scrollHeight - полный скролл страницы (если совпадает условие сработает)
+      // PageYOffset - сколько px пользователь отлистал сверху по оси Y + clientHeight - высота видимой части >= scrollHeight - полный скролл страницы
         openModal();
-        window.removeEventListener('scroll', showModalByScroll);    /* Чтобы удалить обработчик события мы должны сделать ссылку на функцию которая исполняла обработку события */
+        window.removeEventListener('scroll', showModalByScroll);    /* Чтобы удалить обработчик события нужно сделать ссылку на функцию которая исполняла обработку события */
       }
     }
 
