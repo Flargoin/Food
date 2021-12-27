@@ -254,7 +254,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
             form.reset();                                 /* Очистить поля после отправки */
             setTimeout(() => {                            /* Через 2 секунды удалять оповещения */
               statusMessage.remove();
-            }, 2000)
+            }, 2000);
           } else {
             statusMessage.textContent = message.failure;  /* Оповещение "Что-то пошло не так..." */
           }
