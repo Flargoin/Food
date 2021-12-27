@@ -214,5 +214,52 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       21,
       ".menu .container",
     ).render();
+
+
+    /* Forms */
+      const forms = document.querySelectorAll('form');    /* Получаем все формы со страницы */
+
+      const message = {
+        loading: 'Загрузка',
+        success: 'Спасибо! Скоро мы с вами свяжемся',
+        failure: 'Что-то пошло не так...'
+      };
+
+      forms.forEach(item => {                             /* Перебираем полученные формы */
+        postData(item);
+      });
+
+    function postData(form) {                             /* Запишем в функционал который будет повторяться (на странице 2 формы) */
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();                               /* Отменяем стандартное поведение */
+
+        const statusMessage = document.createElement('div');    /* Создаём оповещение статуса отправки данных для пользователя */
+        statusMessage.classList.add('status');
+        statusMessage.textContent = message.loading;
+        form.append(statusMessage);
+        
+
+        const request = new XMLHttpRequest();             /* Запрос */
+        request.open('POST', 'server.php');               /* Настройка запроса */
+        
+        const formData = new FormData(form);
+
+        request.send(formData);                           /* Указываем что нам нужно отправить */                                          
+
+ 
+        request.addEventListener('load', () => {
+          if(request.status === 200) {                    /* Проверка на успешную отправку данных */
+            console.log(request.response);
+            statusMessage.textContent = message.success;  /* Оповещение что всё прошло успешно */
+            form.reset();                                 /* Очистить поля после отправки */
+            setTimeout(() => {                            /* Через 2 секунды удалять оповещения */
+              statusMessage.remove();
+            }, 2000)
+          } else {
+            statusMessage.textContent = message.failure;  /* Оповещение "Что-то пошло не так..." */
+          }
+        });
+      });
+    }
 });
 
