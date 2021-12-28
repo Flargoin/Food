@@ -99,8 +99,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
     /* Modal */
 
     const modalTrigger = document.querySelectorAll('[data-modal]'), /* Обьявляем в переменные кнопки, само модальное окно, и кнопку для скрытия окна */
-          modal = document.querySelector('.modal'),
-          modalCloseBtn = document.querySelector('[data-close]');
+          modal = document.querySelector('.modal')
     
         modalTrigger.forEach(btn => {                               /* Перебираем кнопки из псевдомассива и вешаем обработчик события */
           btn.addEventListener('click', openModal);                 /* Для того чтобы запретить скроллл */
@@ -118,10 +117,10 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       document.body.style.overflow = '';
     }
 
-    modalCloseBtn.addEventListener('click', closeModal);
+
 
     modal.addEventListener('click', (e)=> {                         /* Закрытие при клике за пределами модального окна */
-      if (e.target === modal) {
+      if (e.target === modal || e.target.getAttribute('data-close') == '') {
         closeModal();
       }
     });
@@ -220,7 +219,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       const forms = document.querySelectorAll('form');    /* Получаем все формы со страницы */
 
       const message = {
-        loading: 'Загрузка',
+        loading: 'img/form/spinner.svg',
         success: 'Спасибо! Скоро мы с вами свяжемся',
         failure: 'Что-то пошло не так...'
       };
@@ -233,11 +232,13 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       form.addEventListener('submit', (e) => {
         e.preventDefault();                               /* Отменяем стандартное поведение */
 
-        const statusMessage = document.createElement('div');    /* Создаём оповещение статуса отправки данных для пользователя */
-        statusMessage.classList.add('status');
-        statusMessage.textContent = message.loading;
-        form.append(statusMessage);
-        
+        const statusMessage = document.createElement('img');    /* Создаём оповещение статуса отправки данных для пользователя */
+        statusMessage.src = message.loading;
+        statusMessage.style.cssText = `
+          display: block;
+          margin: 0 auto;
+        `;
+        form.insertAdjacentElement('afterend', statusMessage);  /* Вставляем спиннер загрузки после формы, чтобы не ломать вёрстку */
 
         const request = new XMLHttpRequest();             /* Запрос */
         request.open('POST', 'server.php');               /* Настройка запроса */
@@ -250,16 +251,38 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         request.addEventListener('load', () => {
           if(request.status === 200) {                    /* Проверка на успешную отправку данных */
             console.log(request.response);
-            statusMessage.textContent = message.success;  /* Оповещение что всё прошло успешно */
+            showThanksModal(message.success);             /* Оповещение что всё прошло успешно */
             form.reset();                                 /* Очистить поля после отправки */
-            setTimeout(() => {                            /* Через 2 секунды удалять оповещения */
               statusMessage.remove();
-            }, 2000);
           } else {
-            statusMessage.textContent = message.failure;  /* Оповещение "Что-то пошло не так..." */
+            showThanksModal(message.failure);             /* Оповещение "Что-то пошло не так..." */
           }
         });
       });
+    }
+
+    function showThanksModal(message){
+      const prevModalDialog = document.querySelector('.modal__dialog');   /* Получаем элемент со страницы */
+
+      prevModalDialog.classList.add('hide');                              /* Скрываем элемент */
+      openModal();                                                        /* Открытие модального окна */
+
+      const thanksModal = document.createElement('div');                  /* Создаём модальное окно с оповещением */
+      thanksModal.classList.add('modal__dialog');
+      thanksModal.innerHTML = `
+      <div class="modal__content">
+        <div class="modal__close">×</div>
+        <div class="modal__title">${message}</div>
+      </div>
+      `;
+
+      document.querySelector('.modal').append(thanksModal);               /* Добавляем модальное окно методом append */
+      setTimeout(() => {                                                  /* Время показа оповещения 4 секунды */
+        thanksModal.remove();
+        prevModalDialog.classList.add('show');
+        prevModalDialog.classList.remove('hide');
+        closeModal();                                                     /* Закрываем модальное окно */
+      }, 4000);
     }
 });
 
