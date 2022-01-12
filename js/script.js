@@ -42,7 +42,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         
         /* Timer */
 
-        const deadline = '2022-01-01';                              /* Определяем дедлайн */
+        const deadline = '2022-02-01';                              /* Определяем дедлайн */
 
         function getTimeRemaining(endtime) {                        /* Функция определяющая разницу между дедлайном и текущим временем */
           const t = Date.parse(endtime) - Date.parse(new Date()) ,  /* endtime - конечная точка до которой нам нужно досчитать отнимаем текущую дату */
@@ -239,28 +239,32 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
           margin: 0 auto;
         `;
         form.insertAdjacentElement('afterend', statusMessage);  /* Вставляем спиннер загрузки после формы, чтобы не ломать вёрстку */
-
-        const request = new XMLHttpRequest();             /* Запрос */
-        request.open('POST', 'server.php');               /* Настройка запроса */
+     
         
         const formData = new FormData(form);
 
-        request.send(formData);                           /* Указываем что нам нужно отправить */                                          
+        const object = {}
+          formData.forEach(function(value, key){
+            object[key] = value;
+          });
 
- 
-        request.addEventListener('load', () => {
-          if(request.status === 200) {                    /* Проверка на успешную отправку данных */
-            console.log(request.response);
-            showThanksModal(message.success);             /* Оповещение что всё прошло успешно */
-            form.reset();                                 /* Очистить поля после отправки */
-              statusMessage.remove();
-          } else {
-            showThanksModal(message.failure);             /* Оповещение "Что-то пошло не так..." */
-          }
+        fetch('server.php', {                         /*  Куда будет запрос */
+          method: "POST",                             /* Каким образом будет проходить запрос */
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(object)                             /* Что будет в запросе */
+        }).then(data => data.text())
+        .then ( data => {                           /* Так как fetch возвращает промис можно применить метод .then */
+          console.log(data);                          /* data - данные которые вернул сервер */
+          showThanksModal(message.success);                                
+            statusMessage.remove();
+        }).catch (() => {
+            showThanksModal(message.failure);  
+        }).finally(() => {
+          form.reset();
         });
-      });
-    }
-
+    });
     function showThanksModal(message){
       const prevModalDialog = document.querySelector('.modal__dialog');   /* Получаем элемент со страницы */
 
@@ -284,5 +288,9 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         closeModal();                                                     /* Закрываем модальное окно */
       }, 4000);
     }
-});
+}
+fetch('http://localhost:3000/menu')                                                          /* Делаем запрос к базе данных */
+.then(data => data.json())                                                /* Приводим данные к формату json */
+.then(res => console.log(res));                                           /* Выводим результат */
 
+});
