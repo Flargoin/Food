@@ -1,12 +1,12 @@
 window.addEventListener('DOMContentLoaded', () => {
 
   /* Tabs */
-const tabs = document.querySelectorAll('.tabheader__item'),                   /* Находим элементы и помещаеи их в переменные */
+const tabs = document.querySelectorAll('.tabheader__item'),                   // Находим элементы и помещаеи их в переменные
       tabsContent = document.querySelectorAll('.tabcontent'),
       tabsParent  = document.querySelector ('.tabheader__items');
 
 
-        function hideTabContent() {                                           /* Функция для того чтобы скрыть табы */
+        function hideTabContent() {                                           // Функция для того чтобы скрыть табы
           tabsContent.forEach(item => {
             item.classList.add('hide');
             item.classList.remove('show', 'fade');
@@ -16,7 +16,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
           });
         }
 
-        function showTabContent(i = 0) {                                      /* Функция для того чтобы показать табы */
+        function showTabContent(i = 0) {                                      // Функция для того чтобы показать табы
             tabsContent[i].classList.add('show', 'fade');
             tabsContent[i].classList.remove('hide');
             tabs[i].classList.add('tabheader__item_active');
@@ -25,7 +25,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         hideTabContent();
         showTabContent();
 
-        tabsParent.addEventListener('click', (e) => {                         /* Событие отлавливающие клик на табе (определяет какой таб открыть, остальные закрывает) */
+        tabsParent.addEventListener('click', (e) => {             // Событие отлавливающие клик на табе (определяет какой таб открыть, остальные закрывает)
             const target = e.target;
 
             if(target && target.classList.contains('tabheader__item')) {
@@ -42,16 +42,16 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         
         /* Timer */
 
-        const deadline = '2022-02-01';                              /* Определяем дедлайн */
+        const deadline = '2022-02-01';                              // Определяем дедлайн
 
-        function getTimeRemaining(endtime) {                        /* Функция определяющая разницу между дедлайном и текущим временем */
-          const t = Date.parse(endtime) - Date.parse(new Date()) ,  /* endtime - конечная точка до которой нам нужно досчитать отнимаем текущую дату */
-                days = Math.floor(t / (1000 * 60 * 60 * 24)) ,      /* считаем в милисекундах значения таймера округляя до ближайшего целого(Math.floor)*/
+        function getTimeRemaining(endtime) {                        // Функция определяющая разницу между дедлайном и текущим временем
+          const t = Date.parse(endtime) - Date.parse(new Date()) ,  // endtime - конечная точка до которой нам нужно досчитать отнимаем текущую дату
+                days = Math.floor(t / (1000 * 60 * 60 * 24)) ,      // считаем в милисекундах значения таймера округляя до ближайшего целого(Math.floor)
                 hours = Math.floor((t / (1000* 60 * 60) % 24)) ,
                 minutes = Math.floor((t / 1000 / 60) % 60) ,
                 seconds = Math.floor((t / 1000) % 60);
           
-          return {                                                  /* Создаём объект и помещаем в него значения из функции getTimeRemaining */
+          return {                                                  // Создаём объект и помещаем в него значения из функции getTimeRemaining
             'total': t,
             'days': days,
             'hours': hours,
@@ -60,7 +60,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
           };
         }
 
-        function getZero(num) {                                     /* Функция создающая двухзначные значения, не 9, а 09 к примеру */
+        function getZero(num) {                                     // Функция создающая двухзначные значения, не 9, а 09 к примеру
           if (num >= 0 && num < 10) {
             return `0${num}`;
           } else {
@@ -68,50 +68,50 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
           }
         }
 
-        function setClock(selector, endtime) {                     /* Функция для работы самого таймера */    
+        function setClock(selector, endtime) {                     // Функция для работы самого таймера    
           const timer = document.querySelector(selector),
                 days = timer.querySelector('#days'),
                 hours = timer.querySelector('#hours'),
                 minutes = timer.querySelector('#minutes'),
                 seconds = timer.querySelector('#seconds'),
-                timeInterval = setInterval(updateClock, 1000);     /* Вызываем функцию updateClock каждую секунду (обновление таймера) */
+                timeInterval = setInterval(updateClock, 1000);     // Вызываем функцию updateClock каждую секунду (обновление таймера)
 
-          updateClock();                                           /* Обновляем таймер в самом начале чтобы, JS перебил статичную верстку, иначе таймер после загрузки страницы отобразится через секунду из-за setInterval выше */
+          updateClock();                                           // Обновляем таймер в самом начале чтобы, JS перебил статичную верстку, иначе таймер после загрузки страницы отобразится через секунду из-за setInterval выше
 
-          function updateClock() {                                 /* Функция обновления таймера */
-            const t = getTimeRemaining(endtime);                   /* Помещаем разницу во времени в переменную */
+          function updateClock() {                                 // Функция обновления таймера
+            const t = getTimeRemaining(endtime);                   // Помещаем разницу во времени в переменную
 
-            days.textContent = getZero(t.days);                    /* Помещаем полученые из объекта значения с функцией getZero(преоброзование в 2-ух значное число) в сами элементы таймера */
+            days.textContent = getZero(t.days);                    // Помещаем полученые из объекта значения с функцией getZero(преоброзование в 2-ух значное число) в сами элементы таймера
             hours.textContent = getZero(t.hours);
             minutes.textContent = getZero(t.minutes);
             seconds.textContent = getZero(t.seconds);
 
-            if (t.total <= 0) {                                     /* Остановка таймера когда время закончилось */
+            if (t.total <= 0) {                                     // Остановка таймера когда время закончилось
               clearInterval(timeInterval);
             }
           }
         }
 
-    setClock('.timer', deadline);                                   /* вызываем функцию с 2-мя аргументами, селектор самого таймера и дедлайн */
+    setClock('.timer', deadline);                                   // вызываем функцию с 2-мя аргументами, селектор самого таймера и дедлайн
 
    
    
     /* Modal */
 
-    const modalTrigger = document.querySelectorAll('[data-modal]'), /* Обьявляем в переменные кнопки, само модальное окно, и кнопку для скрытия окна */
-          modal = document.querySelector('.modal')
+    const modalTrigger = document.querySelectorAll('[data-modal]'), // Обьявляем в переменные кнопки, само модальное окно, и кнопку для скрытия окна
+          modal = document.querySelector('.modal');
     
-        modalTrigger.forEach(btn => {                               /* Перебираем кнопки из псевдомассива и вешаем обработчик события */
-          btn.addEventListener('click', openModal);                 /* Для того чтобы запретить скроллл */
+        modalTrigger.forEach(btn => {                               // Перебираем кнопки из псевдомассива и вешаем обработчик события
+          btn.addEventListener('click', openModal);                 // Для того чтобы запретить скроллл
         });
 
-    function openModal() {                                          /* Чтобы не повторять один и тот же код, вывел его в отдельную функцию */
+    function openModal() {                                          // Чтобы не повторять один и тот же код, вывел его в отдельную функцию
       modal.classList.add('show');
       modal.classList.remove('hide');
       document.body.style.overflow = 'hidden';
-      clearInterval(modalTimerId);                                  /* При открытии модального окна таймер ниже сбивается, чтобы не надоедать пользователю */
+      clearInterval(modalTimerId);                                  // При открытии модального окна таймер ниже сбивается, чтобы не надоедать пользователю
     }
-    function closeModal() {                                         /* Чтобы не повторять один и тот же код, вывел его в отдельную функцию */
+    function closeModal() {                                         // Чтобы не повторять один и тот же код, вывел его в отдельную функцию
       modal.classList.remove('show');
       modal.classList.add('hide');
       document.body.style.overflow = '';
@@ -119,59 +119,59 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
 
 
 
-    modal.addEventListener('click', (e)=> {                         /* Закрытие при клике за пределами модального окна */
+    modal.addEventListener('click', (e)=> {                         // Закрытие при клике за пределами модального окна
       if (e.target === modal || e.target.getAttribute('data-close') == '') {
         closeModal();
       }
     });
 
-    document.addEventListener('keydown', (e) => {                   /* Закрытие при нажатии на клавишу ESC */
+    document.addEventListener('keydown', (e) => {                   // Закрытие при нажатии на клавишу ESC
       if(e.code === "Escape" && modal.classList.contains('show')) {
         closeModal();
       }
     });
 
-     const modalTimerId = setTimeout(openModal, 5000);              /* Открытие модального окна через определённый промежуток времени */
+     const modalTimerId = setTimeout(openModal, 5000);              // Открытие модального окна через определённый промежуток времени
 
     function showModalByScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) { 
       // PageYOffset - сколько px пользователь отлистал сверху по оси Y + clientHeight - высота видимой части >= scrollHeight - полный скролл страницы
         openModal();
-        window.removeEventListener('scroll', showModalByScroll);    /* Чтобы удалить обработчик события нужно сделать ссылку на функцию которая исполняла обработку события */
+        window.removeEventListener('scroll', showModalByScroll);    // Чтобы удалить обработчик события нужно сделать ссылку на функцию которая исполняла обработку события
       }
     }
 
-    window.addEventListener('scroll', showModalByScroll);           /*  Когда доскроллим страницу до самого низа, откроется модальное окно */
+    window.addEventListener('scroll', showModalByScroll);           // Когда доскроллим страницу до самого низа, откроется модальное окно
 
     
     
     // Классы для карточек
 
-    class MenuCard {                                                /* Создаём экземпляр класса, анализируем верстку, чтобы сделать динамику в ней */
-      constructor(src, alt, title, descr, price, parentSelector, ...classes) {  /* Помещаем сюда аргументы которые динамически будем встраивать в карточки и вспомогательные аргументы */
-        this.src = src;                                             /* Присваиваем значения будущих объектов */
+    class MenuCard {                                                // Создаём экземпляр класса, анализируем верстку, чтобы сделать динамику в ней
+      constructor(src, alt, title, descr, price, parentSelector, ...classes) {  // Помещаем сюда аргументы которые динамически будем встраивать в карточки и вспомогательные аргументы
+        this.src = src;                                             // Присваиваем значения будущих объектов
         this.alt = alt;
         this.title = title;
         this.descr = descr;
         this.price = price;
         this.parent = document.querySelector(parentSelector);  
         this.classes = classes;  
-        this.transfer = 27;                                          /* примерный курс к доллару(в макете гривны) */
-        this.changeToUAH();                                          /* в объект будут поступать цена в долларах, и будет переводится в гривны по курсу */
+        this.transfer = 27;                                                         // примерный курс к доллару(в макете гривны)
+        this.changeToUAH();                                                         // в объект будут поступать цена в долларах, и будет переводится в гривны по курсу
       }
 
-      changeToUAH() {                                                 /* Сам процесс перевода в гривны */
+      changeToUAH() {                                                               // процесс перевода в гривны
         this.price = this.price * this.transfer;
       }
 
-      render() {                                                                    /* Рендер карточек с динамическим контентом */                                        
+      render() {                                                                    // Рендер карточек с динамическим контентом                                        
         const element = document.createElement('div'); 
 
-        if(this.classes.length === 0) {                                             /* Если классов нет, по дефолту нужно подставлять menu__item */
-          this.element = 'menu__item';                                              /* Предположим если класс понадобиться в будущем */
-          element.classList.add(this.element);                                      /* Назначаем сам класс */
+        if(this.classes.length === 0) {                                             // Если классов нет, по дефолту нужно подставлять menu__item
+          this.element = 'menu__item';                                              // Предположим если класс понадобиться в будущем
+          element.classList.add(this.element);                                      // Назначаем сам класс
         } else {
-          this.classes.forEach(className => element.classList.add(className));        /* Добавляем все классы попавшие в массив classes */ 
+          this.classes.forEach(className => element.classList.add(className));       // Добавляем все классы попавшие в массив classes 
         }
         element.innerHTML = `
           <img src=${this.src} alt=${this.alt}>
@@ -185,38 +185,27 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         `;
         this.parent.append(element);
       }
-    }    
+    }   
+    
+    const getResource = async (url) => {                                                // Функция получения данных
+      const res = await fetch(url);
 
-    new MenuCard(                                                     /* Объект из которого сформируется карточка на странице как и 2 следующие */
-      "img/tabs/vegy.jpg",
-      "vegy",
-      'Меню "Фитнес"',
-      'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-      9,
-      ".menu .container",
-    ).render();
+      if(!res.ok) {
+        throw new Error(`Could not fetch ${url}, status: ${res.status}`);               // Обработка ошибок
+      }
 
-    new MenuCard(
-      "img/tabs/elite.jpg",
-      "elite",
-      'Меню “Премиум”',
-      'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-      14,
-      ".menu .container",
-    ).render();
+      return await res.json();
+    };
 
-    new MenuCard(
-      "img/tabs/post.jpg",
-      "post",
-      'Меню "Постное"',
-      'Меню "Постное" - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-      21,
-      ".menu .container",
-    ).render();
-
+    getResource('http://localhost:3000/menu')                                           // Функция для получения данных с сервера
+    .then(data => {
+      data.forEach(({img, altimg, title, descr, price}) => {                            // Деструкторизация
+        new MenuCard(img, altimg, title, descr, price, '.menu .container').render();    // Передаю в конструктор и происходит рендер
+      });
+    });
 
     /* Forms */
-      const forms = document.querySelectorAll('form');    /* Получаем все формы со страницы */
+      const forms = document.querySelectorAll('form');    // Получаем все формы со страницы
 
       const message = {
         loading: 'img/form/spinner.svg',
@@ -224,39 +213,42 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         failure: 'Что-то пошло не так...'
       };
 
-      forms.forEach(item => {                             /* Перебираем полученные формы */
-        postData(item);
+      forms.forEach(item => {                             // Перебираем полученные формы
+        bindPostData(item);
       });
 
-    function postData(form) {                             /* Запишем в функционал который будет повторяться (на странице 2 формы) */
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();                               /* Отменяем стандартное поведение */
+      const postData = async (url, data) => {             // Async/await (es8), функция для пост запросов
+        const res = await fetch(url,{
+          method: "POST",
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: data    
+        });
 
-        const statusMessage = document.createElement('img');    /* Создаём оповещение статуса отправки данных для пользователя */
+        return await res.json();
+      };
+
+    function bindPostData(form) {                               // Запишем в функцию формы которые будет повторяться (на странице 2 формы)
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();                                     // Отменяем стандартное поведение
+
+        const statusMessage = document.createElement('img');    // Создаём оповещение статуса отправки данных для пользователя
         statusMessage.src = message.loading;
         statusMessage.style.cssText = `
           display: block;
           margin: 0 auto;
         `;
-        form.insertAdjacentElement('afterend', statusMessage);  /* Вставляем спиннер загрузки после формы, чтобы не ломать вёрстку */
+        form.insertAdjacentElement('afterend', statusMessage);  // Вставляем спиннер загрузки после формы, чтобы не ломать вёрстку
      
         
         const formData = new FormData(form);
 
-        const object = {}
-          formData.forEach(function(value, key){
-            object[key] = value;
-          });
+        const json = JSON.stringify(Object.fromEntries(formData.entries())); // превращаем formData в массив массивов(Object.entries), потом в объект (fromEntries), следом в json (stringify)
 
-        fetch('server.php', {                         /*  Куда будет запрос */
-          method: "POST",                             /* Каким образом будет проходить запрос */
-          headers: {
-            'Content-type': 'application/json',
-          },
-          body: JSON.stringify(object)                             /* Что будет в запросе */
-        }).then(data => data.text())
-        .then ( data => {                           /* Так как fetch возвращает промис можно применить метод .then */
-          console.log(data);                          /* data - данные которые вернул сервер */
+        postData('http://localhost:3000/requests', json)
+        .then ( data => {                           
+          console.log(data);                          
           showThanksModal(message.success);                                
             statusMessage.remove();
         }).catch (() => {
@@ -264,14 +256,15 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
         }).finally(() => {
           form.reset();
         });
-    });
+        });
+    }
     function showThanksModal(message){
-      const prevModalDialog = document.querySelector('.modal__dialog');   /* Получаем элемент со страницы */
+      const prevModalDialog = document.querySelector('.modal__dialog');   // Получаем элемент со страницы
 
-      prevModalDialog.classList.add('hide');                              /* Скрываем элемент */
-      openModal();                                                        /* Открытие модального окна */
+      prevModalDialog.classList.add('hide');                              // Скрываем элемент
+      openModal();                                                        // Открытие модального окна
 
-      const thanksModal = document.createElement('div');                  /* Создаём модальное окно с оповещением */
+      const thanksModal = document.createElement('div');                  // Создаём модальное окно с оповещением
       thanksModal.classList.add('modal__dialog');
       thanksModal.innerHTML = `
       <div class="modal__content">
@@ -280,17 +273,12 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   /*
       </div>
       `;
 
-      document.querySelector('.modal').append(thanksModal);               /* Добавляем модальное окно методом append */
-      setTimeout(() => {                                                  /* Время показа оповещения 4 секунды */
+      document.querySelector('.modal').append(thanksModal);               // Добавляем модальное окно методом append
+      setTimeout(() => {                                                  // Время показа оповещения 4 секунды
         thanksModal.remove();
         prevModalDialog.classList.add('show');
         prevModalDialog.classList.remove('hide');
-        closeModal();                                                     /* Закрываем модальное окно */
+        closeModal();                                                     // Закрываем модальное окно
       }, 4000);
     }
-}
-fetch('http://localhost:3000/menu')                                                          /* Делаем запрос к базе данных */
-.then(data => data.json())                                                /* Приводим данные к формату json */
-.then(res => console.log(res));                                           /* Выводим результат */
-
 });
