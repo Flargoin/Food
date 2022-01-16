@@ -283,57 +283,75 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   //
     }
 });
 
-/* Slider 
+/* Slider */
 
-1) Получить элементы
-2) При клике на стрелки должна меняться нумерация
-3) Функции для показа/скрытия слайдов
-4) Функция для бесконечного листания с 4-го на 1-ый с 1-го на 4-ый
-
-*/
-
-const prev       = document.querySelector('.offer__slider-prev'),
-      next       = document.querySelector('.offer__slider-next'),
-      slides     = document.querySelectorAll('.offer__slide'),
-      total      = document.querySelector('#total'),
-      current    = document.querySelector('#current'); 
+const prev          = document.querySelector('.offer__slider-prev'),
+      next          = document.querySelector('.offer__slider-next'),
+      slides        = document.querySelectorAll('.offer__slide'),
+      total         = document.querySelector('#total'),
+      current       = document.querySelector('#current'),
+      slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+      slidesField   = document.querySelector('.offer__slider-inner'),
+      sliderWidth   = window.getComputedStyle(slidesWrapper).width; // Получаем применнёные стили(в объекте) для ширины слайдера
 
 let slideIndex = 1;
+let offset = 0;                                                   // Отступ
 
-showSlides(slideIndex);
-
-if(slides.length < 10) {                                    // Изменение общего числа слайдов
+if(slides.length < 10) {                                          // Изменение общего числа слайдов
   total.textContent = `0${slides.length}`;
+  current.textContent = `0${slideIndex}`;
 } else {
   total.textContent = slides.length;
+  current.textContent = slideIndex;
 }
 
-function showSlides(n) {
-  if(n > slides.length) {                                    // создаём циклирование слайдера
+slidesField.style.width = 100 * slides.length + '%';              // Делаем ширину поля для слайдов шириной во все слайды
+slidesField.style.display = 'flex';
+slidesField.style.transition = '0.5s all';
+
+slidesWrapper.style.overflow = 'hidden';
+slides.forEach(slide => {
+  slide.style.width = sliderWidth;                                // Перебираем каждый слайд и даём максимальную ширину слайдера
+});
+
+next.addEventListener('click', () => {
+  if(offset == +sliderWidth.slice(0, sliderWidth.length - 2) * (slides.length - 1)){  // Преобразовываем строку в число с помощью унарного плюса и вырезания "px" из sliderWidth
+    offset = 0;                                                   // Отступ
+  } else {
+    offset += +sliderWidth.slice(0, sliderWidth.length - 2);
+  }
+  slidesField.style.transform = `translateX(-${offset}px)`;       // Сдвиг по оси X
+
+  if(slideIndex == slides.length) {                                // Если индекс равен крайнему значению то ставить его в начало, иначе +1
     slideIndex = 1;
+  } else {
+    slideIndex++;
   }
-  if (n < 1) {
-    slideIndex = slides.length;
-  }
 
-  slides.forEach(item  => item.style.display = 'none');      // скрываем слайды
-
-  slides[slideIndex - 1].style.display = 'block';            // показываем один определённый 
-
-  if(slides.length < 10) {                                    // Изменение числа открытого слайда
+  if(slides.length < 10) {                                         // Если значение меньше 10, то ставить ему ноль в начало (01)
     current.textContent = `0${slideIndex}`;
   } else {
     current.textContent = slideIndex;
   }
-}
-
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
+});
 
 prev.addEventListener('click', () => {
-  plusSlides(-1);
-});
-next.addEventListener('click', () => {
-  plusSlides(1);
+  if(offset == 0){
+    offset = +sliderWidth.slice(0, sliderWidth.length - 2) * (slides.length - 1);
+  } else {
+    offset -= +sliderWidth.slice(0, sliderWidth.length - 2);
+  }
+  slidesField.style.transform = `translateX(-${offset}px)`;
+
+  if(slideIndex == 1) {
+    slideIndex = slides.length;
+  } else {
+    slideIndex--;
+  }
+
+  if(slides.length < 10) {
+    current.textContent = `0${slideIndex}`;
+  } else {
+    current.textContent = slideIndex;
+  }
 });
