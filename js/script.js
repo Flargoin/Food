@@ -282,3 +282,58 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   //
       }, 4000);
     }
 });
+
+/* Slider 
+
+1) Получить элементы
+2) При клике на стрелки должна меняться нумерация
+3) Функции для показа/скрытия слайдов
+4) Функция для бесконечного листания с 4-го на 1-ый с 1-го на 4-ый
+
+*/
+
+const prev       = document.querySelector('.offer__slider-prev'),
+      next       = document.querySelector('.offer__slider-next'),
+      slides     = document.querySelectorAll('.offer__slide'),
+      total      = document.querySelector('#total'),
+      current    = document.querySelector('#current'); 
+
+let slideIndex = 1;
+
+showSlides(slideIndex);
+
+if(slides.length < 10) {                                    // Изменение общего числа слайдов
+  total.textContent = `0${slides.length}`;
+} else {
+  total.textContent = slides.length;
+}
+
+function showSlides(n) {
+  if(n > slides.length) {                                    // создаём циклирование слайдера
+    slideIndex = 1;
+  }
+  if (n < 1) {
+    slideIndex = slides.length;
+  }
+
+  slides.forEach(item  => item.style.display = 'none');      // скрываем слайды
+
+  slides[slideIndex - 1].style.display = 'block';            // показываем один определённый 
+
+  if(slides.length < 10) {                                    // Изменение числа открытого слайда
+    current.textContent = `0${slideIndex}`;
+  } else {
+    current.textContent = slideIndex;
+  }
+}
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+prev.addEventListener('click', () => {
+  plusSlides(-1);
+});
+next.addEventListener('click', () => {
+  plusSlides(1);
+});
