@@ -360,11 +360,15 @@ for(let i = 0; i < slides.length; i++) {
   dots.push(dot);
 }
 
+function deleteNotDigits(str) {
+  return +str.replace(/\D/g, '');
+}
+
 next.addEventListener('click', () => {
-  if(offset == +sliderWidth.slice(0, sliderWidth.length - 2) * (slides.length - 1)){  // Преобразовываем строку в число с помощью унарного плюса и вырезания "px" из sliderWidth
+  if(offset == deleteNotDigits(sliderWidth) * (slides.length - 1)){  // Преобразовываем строку в число с помощью унарного плюса и вырезания "px" из sliderWidth
     offset = 0;                                                   // Отступ
   } else {
-    offset += +sliderWidth.slice(0, sliderWidth.length - 2);
+    offset += deleteNotDigits(sliderWidth);
   }
   slidesField.style.transform = `translateX(-${offset}px)`;       // Сдвиг по оси X
 
@@ -386,9 +390,9 @@ next.addEventListener('click', () => {
 
 prev.addEventListener('click', () => {
   if(offset == 0){
-    offset = +sliderWidth.slice(0, sliderWidth.length - 2) * (slides.length - 1);
+    offset = deleteNotDigits(sliderWidth) * (slides.length - 1);
   } else {
-    offset -= +sliderWidth.slice(0, sliderWidth.length - 2);
+    offset -= deleteNotDigits(sliderWidth);
   }
   slidesField.style.transform = `translateX(-${offset}px)`;
 
@@ -413,7 +417,7 @@ dots.forEach(dot => {
     const slideTo = e.target.getAttribute('data-slide-to');
 
     slideIndex = slideTo;
-    offset = +sliderWidth.slice(0, sliderWidth.length - 2) * (slideTo - 1);
+    offset = deleteNotDigits(sliderWidth) * (slideTo - 1);
 
     slidesField.style.transform = `translateX(-${offset}px)`;
 
