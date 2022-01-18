@@ -199,7 +199,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   //
 
     getResource('http://localhost:3000/menu')                                           // Функция для получения данных с сервера
     .then(data => {
-      data.forEach(({img, altimg, title, descr, price}) => {                            // Деструкторизация
+      data.forEach(({img, altimg, title, descr, price}) => {                            // Деструктуризация
         new MenuCard(img, altimg, title, descr, price, '.menu .container').render();    // Передаю в конструктор и происходит рендер
       });
     });
@@ -217,7 +217,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),                   //
         bindPostData(item);
       });
 
-      const postData = async (url, data) => {             // Async/await (es8), функция для пост запросов
+      const postData = async (url, data) => {             // функция для пост запросов
         const res = await fetch(url,{
           method: "POST",
           headers: {
@@ -312,7 +312,7 @@ slidesField.style.transition = '0.5s all';
 
 slidesWrapper.style.overflow = 'hidden';
 slides.forEach(slide => {
-  slide.style.width = sliderWidth;                                // Перебираем каждый слайд и даём максимальную ширину слайдера
+  slide.style.width = sliderWidth;                                // Перебираем каждый слайд и даём максимальную ширину видимой части слайдера
 });
 
 slider.style.position = 'relative';
@@ -366,19 +366,19 @@ function deleteNotDigits(str) {
 
 next.addEventListener('click', () => {
   if(offset == deleteNotDigits(sliderWidth) * (slides.length - 1)){  // Преобразовываем строку в число с помощью унарного плюса и вырезания "px" из sliderWidth
-    offset = 0;                                                   // Отступ
+    offset = 0;                                                      // Отступ
   } else {
     offset += deleteNotDigits(sliderWidth);
   }
-  slidesField.style.transform = `translateX(-${offset}px)`;       // Сдвиг по оси X
+  slidesField.style.transform = `translateX(-${offset}px)`;          // Сдвиг по оси X
 
-  if(slideIndex == slides.length) {                                // Если индекс равен крайнему значению то ставить его в начало, иначе +1
+  if(slideIndex == slides.length) {                                  // Если индекс равен крайнему значению то ставить его в начало, иначе +1
     slideIndex = 1;
   } else {
     slideIndex++;
   }
 
-  if(slides.length < 10) {                                         // Если значение меньше 10, то ставить ему ноль в начало (01)
+  if(slides.length < 10) {                                            // Если значение меньше 10, то ставить ему ноль в начало (01)
     current.textContent = `0${slideIndex}`;
   } else {
     current.textContent = slideIndex;
@@ -435,9 +435,40 @@ dots.forEach(dot => {
 // Calculator
 
 const result = document.querySelector('.calculating__result span'); // Получаем спан в котором будет выводится спан
-let sex = 'female',
- height, weight, age,
- ratio = 1.375;                                // Получаем все необходимые переменные для расчёта
+
+let sex, height, weight, age, ratio;                                // Получаем все необходимые переменные для расчёта
+
+if(localStorage.getItem('sex')) {
+  sex = localStorage.getItem('sex');
+} else {
+  sex = 'female';
+  localStorage.setItem('sex', 'female');
+}
+
+if(localStorage.getItem('ratio')) {
+  ratio = localStorage.getItem('ratio');
+} else {
+  ratio = 1.375;
+  localStorage.setItem('ratio', 1.375);
+}
+
+function initLocalSettings(selector, activeClass) {                             // Эта функция сверяет данные localStorage c дефолтными или введёнными пользователем
+  const elements = document.querySelectorAll(selector);
+
+  elements.forEach(elem => {
+    elem.classList.remove(activeClass);
+    if(elem.getAttribute('id') === localStorage.getItem('sex')) {
+      elem.classList.add(activeClass);
+    }
+
+    if(elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+      elem.classList.add(activeClass);
+    }
+  });
+}
+
+initLocalSettings('#gender div', 'calculating__choose-item_active');
+initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
 
 function calcTotal() {                                              // Функция для рассчёта (будет вызываться каждый раз когда что меняется)
   if (!sex || !height || !weight || !age || !ratio) {               // Проверяем заполнены ли поля (если не заполнены, результат выведен не будет)
@@ -454,15 +485,17 @@ function calcTotal() {                                              // Функ�
 
 calcTotal();
 
-function getStaticInfo(parentSelector, activeClass) {
-  const elements =document.querySelectorAll(`${parentSelector} div`);
+function getStaticInfo(selector, activeClass) {
+  const elements =document.querySelectorAll(selector);
 
   elements.forEach(elem => {
     elem.addEventListener('click', (e) => {
       if (e.target.getAttribute('data-ratio')) {                                                // Работаем с значениям атрибутов
         ratio = +e.target.getAttribute('data-ratio');                                           // Получаем значение из дата-атрибута в вёрстке
+        localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
       } else {                                                                                  // Работаем с id
         sex = e.target.getAttribute('id');
+        localStorage.setItem('sex', e.target.getAttribute('id'));
       }
   
       elements.forEach(elem => {                                                                // Удаление и назначение активного класса
@@ -475,13 +508,20 @@ function getStaticInfo(parentSelector, activeClass) {
   });
 }
 
-getStaticInfo('#gender', 'calculating__choose-item_active');
-getStaticInfo('.calculating__choose_big', 'calculating__choose-item_active');
+getStaticInfo('#gender div', 'calculating__choose-item_active');
+getStaticInfo('.calculating__choose_big div', 'calculating__choose-item_active');
 
 function getDinamicInfo(selector) {                                                           // Функция в которой получаем данные со страницы в виде строки переводим в числа
   const input = document.querySelector(selector);
 
   input.addEventListener('input', () => {
+
+    if(input.value.match(/\D/g)) {                                                            // Если пользователь вводит не числа, границы окрасятся в красный
+      input.style.border = '1px solid red';
+    } else {
+      input.style.border = 'none';
+    }
+
     switch(input.getAttribute('id')) {
       case 'height':
         height = +input.value;
