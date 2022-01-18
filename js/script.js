@@ -432,3 +432,72 @@ dots.forEach(dot => {
   });
 });
 
+// Calculator
+
+const result = document.querySelector('.calculating__result span'); // Получаем спан в котором будет выводится спан
+let sex = 'female',
+ height, weight, age,
+ ratio = 1.375;                                // Получаем все необходимые переменные для расчёта
+
+function calcTotal() {                                              // Функция для рассчёта (будет вызываться каждый раз когда что меняется)
+  if (!sex || !height || !weight || !age || !ratio) {               // Проверяем заполнены ли поля (если не заполнены, результат выведен не будет)
+      result.textContent = '0';
+      return;
+  }
+
+  if (sex === 'female') {
+    result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);     // формула жен.
+  } else {
+    result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);    // формула муж
+  }
+}
+
+calcTotal();
+
+function getStaticInfo(parentSelector, activeClass) {
+  const elements =document.querySelectorAll(`${parentSelector} div`);
+
+  elements.forEach(elem => {
+    elem.addEventListener('click', (e) => {
+      if (e.target.getAttribute('data-ratio')) {                                                // Работаем с значениям атрибутов
+        ratio = +e.target.getAttribute('data-ratio');                                           // Получаем значение из дата-атрибута в вёрстке
+      } else {                                                                                  // Работаем с id
+        sex = e.target.getAttribute('id');
+      }
+  
+      elements.forEach(elem => {                                                                // Удаление и назначение активного класса
+        elem.classList.remove(activeClass);
+      });
+      e.target.classList.add(activeClass);
+  
+      calcTotal();
+    });
+  });
+}
+
+getStaticInfo('#gender', 'calculating__choose-item_active');
+getStaticInfo('.calculating__choose_big', 'calculating__choose-item_active');
+
+function getDinamicInfo(selector) {                                                           // Функция в которой получаем данные со страницы в виде строки переводим в числа
+  const input = document.querySelector(selector);
+
+  input.addEventListener('input', () => {
+    switch(input.getAttribute('id')) {
+      case 'height':
+        height = +input.value;
+        break;
+      case 'weight':
+        weight = +input.value;
+        break;
+      case 'age':
+        age = +input.value;
+        break;
+    }
+
+    calcTotal();
+  });
+}
+
+getDinamicInfo('#height');
+getDinamicInfo('#weight');
+getDinamicInfo('#age');
