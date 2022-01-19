@@ -32,3 +32,5 @@
 - json-server
 - Базовое понимание регулярных выражений
 - localStorage
+- Модули (CommonJS)
+- Webpack
