@@ -1,3 +1,6 @@
+import { openModal, closeModal } from "./modal";
+
+
 function forms() {
         /* Forms */
         const forms = document.querySelectorAll('form');    // Получаем все формы со страницы
@@ -78,4 +81,4 @@ function forms() {
       }
     }
 
-module.exports = forms;
+export default forms;

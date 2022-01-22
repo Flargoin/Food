@@ -1,3 +1,15 @@
+function openModal() {                                          // Чтобы не повторять один и тот же код, вывел его в отдельную функцию
+  modal.classList.add('show');
+  modal.classList.remove('hide');
+  document.body.style.overflow = 'hidden';
+  clearInterval(modalTimerId);                                  // При открытии модального окна таймер ниже сбивается, чтобы не надоедать пользователю
+}
+function closeModal() {                                         // Чтобы не повторять один и тот же код, вывел его в отдельную функцию
+  modal.classList.remove('show');
+  modal.classList.add('hide');
+  document.body.style.overflow = '';
+}
+
 function modal() {
         /* Modal */
 
@@ -7,19 +19,6 @@ function modal() {
     modalTrigger.forEach(btn => {                               // Перебираем кнопки из псевдомассива и вешаем обработчик события
         btn.addEventListener('click', openModal);               // Для того чтобы запретить скроллл
     });
-
-  function openModal() {                                          // Чтобы не повторять один и тот же код, вывел его в отдельную функцию
-    modal.classList.add('show');
-    modal.classList.remove('hide');
-    document.body.style.overflow = 'hidden';
-    clearInterval(modalTimerId);                                  // При открытии модального окна таймер ниже сбивается, чтобы не надоедать пользователю
-  }
-  function closeModal() {                                         // Чтобы не повторять один и тот же код, вывел его в отдельную функцию
-    modal.classList.remove('show');
-    modal.classList.add('hide');
-    document.body.style.overflow = '';
-  }
-
 
 
   modal.addEventListener('click', (e)=> {                         // Закрытие при клике за пределами модального окна
@@ -47,4 +46,6 @@ function modal() {
   window.addEventListener('scroll', showModalByScroll);           // Когда доскроллим страницу до самого низа, откроется модальное окно
 }
 
-module.exports = modal;
+export default modal;
+export {closeModal};
+export {openModal};
