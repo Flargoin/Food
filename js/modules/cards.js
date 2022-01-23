@@ -1,3 +1,5 @@
+import { getResource } from "../services/services";
+
 function cards() {
     // Классы для карточек
 
@@ -41,16 +43,6 @@ function cards() {
         }
       }   
       
-      const getResource = async (url) => {                                                // Функция получения данных
-        const res = await fetch(url);
-  
-        if(!res.ok) {
-          throw new Error(`Could not fetch ${url}, status: ${res.status}`);               // Обработка ошибок
-        }
-  
-        return await res.json();
-      };
-  
       getResource('http://localhost:3000/menu')                                           // Функция для получения данных с сервера
       .then(data => {
         data.forEach(({img, altimg, title, descr, price}) => {                            // Деструктуризация

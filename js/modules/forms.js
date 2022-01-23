@@ -1,9 +1,9 @@
 import { openModal, closeModal } from "./modal";
+import { postData } from "../services/services";
 
-
-function forms() {
+function forms(formSelector, modalTimerId) {
         /* Forms */
-        const forms = document.querySelectorAll('form');    // Получаем все формы со страницы
+        const forms = document.querySelectorAll(formSelector);    // Получаем все формы со страницы
 
         const message = {
           loading: 'img/form/spinner.svg',
@@ -15,17 +15,7 @@ function forms() {
           bindPostData(item);
         });
   
-        const postData = async (url, data) => {             // функция для пост запросов
-          const res = await fetch(url,{
-            method: "POST",
-            headers: {
-              'Content-type': 'application/json',
-            },
-            body: data    
-          });
-  
-          return await res.json();
-        };
+
   
       function bindPostData(form) {                               // Запишем в функцию формы которые будет повторяться (на странице 2 формы)
         form.addEventListener('submit', (e) => {
@@ -60,7 +50,7 @@ function forms() {
         const prevModalDialog = document.querySelector('.modal__dialog');   // Получаем элемент со страницы
   
         prevModalDialog.classList.add('hide');                              // Скрываем элемент
-        openModal();                                                        // Открытие модального окна
+        openModal('.modal', modalTimerId);                                                        // Открытие модального окна
   
         const thanksModal = document.createElement('div');                  // Создаём модальное окно с оповещением
         thanksModal.classList.add('modal__dialog');
@@ -76,7 +66,7 @@ function forms() {
           thanksModal.remove();
           prevModalDialog.classList.add('show');
           prevModalDialog.classList.remove('hide');
-          closeModal();                                                     // Закрываем модальное окно
+          closeModal('.modal');                                                     // Закрываем модальное окно
         }, 4000);
       }
     }

@@ -1,15 +1,15 @@
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
     
 /* Slider */
 
-const prev          = document.querySelector('.offer__slider-prev'),
-      slider        = document.querySelector('.offer__slider'),
-      next          = document.querySelector('.offer__slider-next'),
-      slides        = document.querySelectorAll('.offer__slide'),
-      total         = document.querySelector('#total'),
-      current       = document.querySelector('#current'),
-      slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-      slidesField   = document.querySelector('.offer__slider-inner'),
+const prev          = document.querySelector(prevArrow),
+      slider        = document.querySelector(container),
+      next          = document.querySelector(nextArrow),
+      slides        = document.querySelectorAll(slide),
+      total         = document.querySelector(totalCounter),
+      current       = document.querySelector(currentCounter),
+      slidesWrapper = document.querySelector(wrapper),
+      slidesField   = document.querySelector(field),
       sliderWidth   = window.getComputedStyle(slidesWrapper).width; // Получаем применнёные стили(в объекте) для ширины слайдера
 
 let slideIndex = 1;

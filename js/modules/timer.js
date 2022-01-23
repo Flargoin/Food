@@ -1,8 +1,6 @@
-function timer() {
+function timer(id, deadline) {
     
         /* Timer */
-
-        const deadline = '2022-02-01';                              // Определяем дедлайн
 
         function getTimeRemaining(endtime) {                        // Функция определяющая разницу между дедлайном и текущим временем
           const t = Date.parse(endtime) - Date.parse(new Date()) ,  // endtime - конечная точка до которой нам нужно досчитать отнимаем текущую дату
@@ -52,7 +50,7 @@ function timer() {
           }
         }
 
-    setClock('.timer', deadline);                                   // вызываем функцию с 2-мя аргументами, селектор самого таймера и дедлайн
+    setClock(id, deadline);                                   // вызываем функцию с 2-мя аргументами, селектор самого таймера и дедлайн
 
 }
 
