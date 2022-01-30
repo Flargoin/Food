@@ -1,6 +1,7 @@
 require('es6-promise').polyfill();
 import 'nodelist-foreach-polyfill';
 
+
 import tabs from'./modules/tabs';
 import modal, { openModal } from'./modules/modal';
 import timer from'./modules/timer';
@@ -8,6 +9,7 @@ import cards from'./modules/cards';
 import forms from'./modules/forms';
 import slider from'./modules/slider';
 import calculator from'./modules/calculator';
+import burger from './modules/burger';
 
 window.addEventListener('DOMContentLoaded', () => {
   
