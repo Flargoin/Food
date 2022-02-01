@@ -4,10 +4,10 @@ import 'nodelist-foreach-polyfill';
 
 import tabs from'./modules/tabs';
 import modal, { openModal } from'./modules/modal';
+import slider from'./modules/slider';
 import timer from'./modules/timer';
 import cards from'./modules/cards';
 import forms from'./modules/forms';
-import slider from'./modules/slider';
 import calculator from'./modules/calculator';
 import burger from './modules/burger';
 
@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   tabs('.tabheader__item', '.tabcontent', '.tabheader__items', 'tabheader__item_active');
   modal('[data-modal]', '.modal', modalTimerId);
-  timer('.timer', '2022-02-01');
+  timer('.timer', '2022-02-15');
   cards();
   forms('form', modalTimerId);
   slider({

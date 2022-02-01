@@ -4,6 +4,8 @@
 по курсу 
 [![Udemy](https://img.shields.io/badge/Udemy-black?style=flat-square&logo=Udemy)](https://www.udemy.com/course/javascript_full/)
 
+# Этап работы : Адаптация под мобильные устройства 
+
 # Реализованный функционал
 - Табы
 - Таймер обратного отсчёта
