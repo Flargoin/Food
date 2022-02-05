@@ -73,6 +73,14 @@
     }
     .header__logo {
         max-height: 50px;
+        margin-bottom: 100px;
+    }
+    .header__links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .header__link {
+        margin-bottom: 35px;
     }
     .header__left-block {
         display: none;
@@ -89,7 +97,7 @@
         height: 100vh;
         top: 42px;
         left: -100%;
-        padding: 90px 10px;
+        padding: 90px 50px;
         transition: 0.4s;
     }
     .header__left-menu.active {
@@ -185,7 +193,7 @@
         margin: 30px 10px 0 10px;
     }
     .calculating__choose_big .calculating__choose-item {
-        width: 180px;
+        max-width: 320px;
     }
 
     .menu__field .container{
@@ -226,9 +234,6 @@
     .title {
         text-align: center;
     }
-    .calculating__choose_big .calculating__choose-item {
-        max-width: 150px;
-    }
     .calculating__choose_medium {
         margin: 30px 10px 0 10px;
     }
@@ -265,6 +270,9 @@
     .header {
         padding: 0 30px;
     }
+    .header__left-menu {
+        width: 100%;
+    }
     .tabheader__items {
         display: block;
     }
@@ -298,6 +306,9 @@
         width: 100%;
     }
 
+    .calculating__field {
+        padding: 0 15px;
+    }
     .calculating__choose_medium {
         flex-direction: column;
         align-items: center;
@@ -316,15 +327,12 @@
         flex-direction: column;
         align-items: center;
     }
-    .calculating__choose .calculating__choose-item {
-        width: 150px;
-    }
 
     .order__form {
         padding: 0 15px;
     }
     .order__input {
-        width: 100%;
+        max-width: 320px;
     }
 
     .promotion {
