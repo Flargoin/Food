@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   tabs('.tabheader__item', '.tabcontent', '.tabheader__items', 'tabheader__item_active');
   modal('[data-modal]', '.modal', modalTimerId);
-  timer('.timer', '2022-02-15');
+  timer('.timer', '2022-06-15');
   cards();
   forms('form', modalTimerId);
   slider({
