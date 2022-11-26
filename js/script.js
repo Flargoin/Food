@@ -1,9 +1,8 @@
 'use strict';
 
 /* Событие которое ждёт прогрузки DOM */
-
-/* Табы */
 document.addEventListener("DOMContentLoaded", () => {
+    /* Табы */
     const parentTabs = document.querySelector('.tabheader__items'),
         tab = document.querySelectorAll('.tabheader__item'),
         tabContent = document.querySelectorAll('.tabcontent');
@@ -43,14 +42,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Таймер
-    /* 
-    1) Функция которая получает элементы и будет что-то делать с ними
-    2) Функция определяющая разницу времени пользователя с дедлайном
-    3) Функция обновления таймера
-    */
 
+    /* Создаём переменную до которой таймер будет отсчитывать */
     const deadline = '2023-03-17';
 
+    /*
+     Создаём функцию которая будет высчитывать разницу между нынешней датой и датой окончания акции :
+        1) Создаём переменные для помещение числовых значений.
+        2) Создаём техническую переменную в которую получаем разницу в милисекундах
+        3) Создаём проверку на отрицательное значение
+        4) Если t = 0 и меньше - показывать нули, если > нуля - преобразовывать милисекунды в нужные данные
+        5) Вернуть объект с получившимся значениями.
+     */
     function getTimeRemaining(endtime) {
         let days, hours, minutes, seconds;
         const t = Date.parse(endtime) - Date.parse(new Date());
@@ -61,9 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
             seconds = 0
         } else {
             days = Math.floor(t / (1000 * 60 * 60 * 24)),
-                hours = Math.floor((t / (1000 * 60 * 60) % 24)),
-                minutes = Math.floor((t / 1000 / 60) % 60),
-                seconds = Math.floor((t / 1000) % 60);
+            hours = Math.floor((t / (1000 * 60 * 60) % 24)),
+            minutes = Math.floor((t / 1000 / 60) % 60),
+            seconds = Math.floor((t / 1000) % 60);
         }
 
         return {
@@ -75,6 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+
+    /* 
+        Создаём функцию подстановки нуля однозначным числам.
+    */
     function getZero(num) {
         if (num >= 0 && num < 10) {
             return `0${num}`;
@@ -83,6 +90,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    /* 
+        Функция которая будет показывать время на странице:
+        1) Получаем элементы на странице
+        2) Вызываем обновление таймера (UpdataeClock) каждую секунду.
+        3) Создаём внутри функцию обновления таймера:
+            - помещаем в техническую переменную (t) возвращенный объект функцией getRemaining(), endtime придёт от setClock.
+            - помещаем в каждый полученный элемент соответствующее значение объекта с вызовом функции getZero().
+            - если общее число милисекунд меньше нуля, таймер не обновляется.
+    */
     function setClock(selector, endtime) {
         const timer = document.querySelector(selector),
             days = timer.querySelector('#days'),
