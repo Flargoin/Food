@@ -244,4 +244,88 @@ document.addEventListener("DOMContentLoaded", () => {
         'menu__item'
     ).render();
 
+
+
+    
+     /* Отправка данных из форм */
+     const forms = document.querySelectorAll('form');
+
+     /* Создаём объект с сообщениями для пользователя */
+     const message = {
+         loading : 'Загрузка',
+         success : 'Спасибо! Скоро мы с вами свяжемся.',
+         failure   : 'Что-то пошло не так...'
+     };
+ 
+     /* Подвязываем каждую форму к функции запроса */
+     forms.forEach(item => {
+         postData(item);
+     });
+ 
+ 
+     /* 
+         Создаём функцию которая будет отправлять данные на сервер.
+         Передаём в аргумент форму, чтобы потом было удобно навешывать обработчик события.
+     */
+     function postData(form) {
+         form.addEventListener('submit', (e) => {
+             /* Отменяем дефолтное поведение браузера */
+             e.preventDefault();
+ 
+             /* Создаём элемент который будем показывать для оповещения пользователя о статусе */
+             const statusMessage = document.createElement('div');
+             statusMessage.classList.add('status');
+             statusMessage.textContent = message.loading;
+             form.append(statusMessage);
+ 
+ 
+             /* Создаём концепцию запроса */
+             const request = new XMLHttpRequest;
+ 
+             /* Передаём настройки запроса */
+             request.open('POST', 'server.php');
+ 
+             /* 
+                 Http заголовок для FormData
+                 request.setRequestHeader = ('Content-type', 'multipart/form-data');
+                 Если мы используем связку XMLHttpRequest + FormData - ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО.
+             */
+             request.setRequestHeader = ('Content-type', 'application/json');
+ 
+             /* 
+                 Создаём концепцию FormData которая будет собирать данные из формы которую мы передаём как аргумент 
+                 (ОСТОРОЖНО!!! МЫ ВСЕГДА ДОЛЖНЫ УКАЗЫВАТЬ У ИНПУТОВ АТРИБУТ name!!!)
+             */
+             const formData = new FormData(form);
+ 
+             /* Строки 293, 302-310 преобразовывают данные в JSON */
+             const object = {};
+             formData.forEach(function(value, key) {
+                 object[key] = value;
+             });
+ 
+             const json = JSON.stringify(object);
+ 
+             /* Метод отправки send принимает в себя formData которая собрала данные из аргумента form. Или JSON после преобразования. */
+             request.send(json);
+ 
+             /* Событие отслеживает конечную стадию запроса */
+             request.addEventListener('load', () => {
+                 /* Проверяем что запрос успешный */
+                 if(request.status === 200) {
+                     console.log(request.response);
+                     /* Меняем статус сообщение для пользователя */
+                     statusMessage.textContent = message.success;
+                     /* Очищаем форму */
+                     form.reset();
+                     /* Удаляем оповещение через 5 секунд */
+                     setTimeout(() => {
+                         statusMessage.remove()
+                     }, 5000);
+                 } else {
+                     statusMessage.textContent = message.failure;
+                 }
+             });
+         });
+     };
 });
