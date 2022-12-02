@@ -128,8 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Модальное окно */
     const modal = document.querySelector('.modal'),
-        modalTrigger = document.querySelectorAll('[data-modal]'),
-        modalCloseBtn = document.querySelector('[data-close]');
+          modalTrigger = document.querySelectorAll('[data-modal]');
 
     function openModal() {
         modal.classList.add('show');
@@ -148,10 +147,8 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener('click', openModal);
     });
 
-    modalCloseBtn.addEventListener('click', closeModal);
-
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        if (e.target === modal || e.target.getAttribute('data-close') == 'close') {
             closeModal();
         };
     });
@@ -162,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     });
 
-    // const modalTimerId = setTimeout(openModal, 5000);
+    const modalTimerId = setTimeout(openModal, 5000);
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -246,86 +243,114 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-    
-     /* Отправка данных из форм */
-     const forms = document.querySelectorAll('form');
+    /* Отправка данных из форм */
 
-     /* Создаём объект с сообщениями для пользователя */
-     const message = {
-         loading : 'Загрузка',
-         success : 'Спасибо! Скоро мы с вами свяжемся.',
-         failure   : 'Что-то пошло не так...'
-     };
- 
-     /* Подвязываем каждую форму к функции запроса */
-     forms.forEach(item => {
-         postData(item);
-     });
- 
- 
-     /* 
-         Создаём функцию которая будет отправлять данные на сервер.
-         Передаём в аргумент форму, чтобы потом было удобно навешывать обработчик события.
-     */
-     function postData(form) {
-         form.addEventListener('submit', (e) => {
-             /* Отменяем дефолтное поведение браузера */
-             e.preventDefault();
- 
-             /* Создаём элемент который будем показывать для оповещения пользователя о статусе */
-             const statusMessage = document.createElement('div');
-             statusMessage.classList.add('status');
-             statusMessage.textContent = message.loading;
-             form.append(statusMessage);
- 
- 
-             /* Создаём концепцию запроса */
-             const request = new XMLHttpRequest;
- 
-             /* Передаём настройки запроса */
-             request.open('POST', 'server.php');
- 
-             /* 
-                 Http заголовок для FormData
-                 request.setRequestHeader = ('Content-type', 'multipart/form-data');
-                 Если мы используем связку XMLHttpRequest + FormData - ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО.
-             */
-             request.setRequestHeader = ('Content-type', 'application/json');
- 
-             /* 
-                 Создаём концепцию FormData которая будет собирать данные из формы которую мы передаём как аргумент 
-                 (ОСТОРОЖНО!!! МЫ ВСЕГДА ДОЛЖНЫ УКАЗЫВАТЬ У ИНПУТОВ АТРИБУТ name!!!)
-             */
-             const formData = new FormData(form);
- 
-             /* Строки 293, 302-310 преобразовывают данные в JSON */
-             const object = {};
-             formData.forEach(function(value, key) {
-                 object[key] = value;
-             });
- 
-             const json = JSON.stringify(object);
- 
-             /* Метод отправки send принимает в себя formData которая собрала данные из аргумента form. Или JSON после преобразования. */
-             request.send(json);
- 
-             /* Событие отслеживает конечную стадию запроса */
-             request.addEventListener('load', () => {
-                 /* Проверяем что запрос успешный */
-                 if(request.status === 200) {
-                     console.log(request.response);
-                     /* Меняем статус сообщение для пользователя */
-                     statusMessage.textContent = message.success;
-                     /* Очищаем форму */
-                     form.reset();
-                     /* Удаляем оповещение через 5 секунд */
-                     setTimeout(() => {
-                         statusMessage.remove()
-                     }, 5000);
-                 } else {
-                     statusMessage.textContent = message.failure;
-                 }
-             });
-         });
-     };
+    const forms = document.querySelectorAll('form');
+
+    /* Создаём объект с сообщениями для пользователя */
+    const message = {
+        loading : 'img/form/spinner.svg',
+        success : 'Спасибо! Скоро мы с вами свяжемся.',
+        failure   : 'Что-то пошло не так...'
+    };
+
+    /* Подвязываем каждую форму к функции запроса */
+    forms.forEach(item => {
+        postData(item);
+    });
+
+
+    /* 
+        Создаём функцию которая будет отправлять данные на сервер.
+        Передаём в аргумент форму, чтобы потом было удобно навешывать обработчик события.
+    */
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            /* Отменяем дефолтное поведение браузера */
+            e.preventDefault();
+
+            /* Создаём элемент который будем показывать для оповещения пользователя о статусе */
+            const statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;
+            statusMessage.style.cssText = `
+            display: block;
+            margin: 0 auto;
+            `;
+            form.insertAdjacentElement('afterend', statusMessage);
+
+
+            /* Создаём концепцию запроса */
+            const request = new XMLHttpRequest;
+
+            /* Передаём настройки запроса */
+            request.open('POST', 'server.php');
+
+            /* 
+                Http заголовок для FormData
+                request.setRequestHeader = ('Content-type', 'multipart/form-data');
+                Если мы используем связку XMLHttpRequest + FormData - ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО.
+            */
+            request.setRequestHeader = ('Content-type', 'application/json');
+
+            /* 
+                Создаём концепцию FormData которая будет собирать данные из формы которую мы передаём как аргумент 
+                (ОСТОРОЖНО!!! МЫ ВСЕГДА ДОЛЖНЫ УКАЗЫВАТЬ У ИНПУТОВ АТРИБУТ name!!!)
+            */
+            const formData = new FormData(form);
+
+            /* Строки 293, 302-310 преобразовывают данные в JSON */
+            const object = {};
+            formData.forEach(function(value, key) {
+                object[key] = value;
+            });
+
+            const json = JSON.stringify(object);
+
+            /* Метод отправки send принимает в себя formData которая собрала данные из аргумента form. Или JSON после преобразования. */
+            request.send(json);
+
+            /* Событие отслеживает конечную стадию запроса */
+            request.addEventListener('load', () => {
+                /* Проверяем что запрос успешный */
+                if(request.status === 200) {
+                    console.log(request.response);
+                    /* Меняем статус сообщение для пользователя */
+                    showThanksModal(message.success) ;
+                    /* Очищаем форму */
+                    form.reset();
+                    /* Удаляем оповещение о загрузке */
+                    statusMessage.remove()
+
+                } else {
+                    showThanksModal(message.failure);
+                }
+            });
+        });
+    };
+
+    /* Создаём окно с благодарностью */
+    function showThanksModal(message) {
+        /* Скрываем предыдущий контент */
+        const prevModalDialog = document.querySelector('.modal__dialog');
+        prevModalDialog.classList.add('hide');
+
+        /* Создаём новую структуру окна */
+        openModal();
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+        <div class="modal__content">
+            <div class="modal__close">×</div>
+            <div class="modal__title">${message}</div>
+        </div>
+        `;
+
+        /* Показывать 4 секунды окно с благодарностью, затем закрывать окно и возвращать всё на место */
+        document.querySelector('.modal').append(thanksModal);
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.remove('hide');
+            closeModal();
+        }, 4000)
+    }
 });
