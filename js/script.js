@@ -64,9 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
             seconds = 0
         } else {
             days = Math.floor(t / (1000 * 60 * 60 * 24)),
-            hours = Math.floor((t / (1000 * 60 * 60) % 24)),
-            minutes = Math.floor((t / 1000 / 60) % 60),
-            seconds = Math.floor((t / 1000) % 60);
+                hours = Math.floor((t / (1000 * 60 * 60) % 24)),
+                minutes = Math.floor((t / 1000 / 60) % 60),
+                seconds = Math.floor((t / 1000) % 60);
         }
 
         return {
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Модальное окно */
     const modal = document.querySelector('.modal'),
-          modalTrigger = document.querySelectorAll('[data-modal]');
+        modalTrigger = document.querySelectorAll('[data-modal]');
 
     function openModal() {
         modal.classList.add('show');
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     modal.addEventListener('click', (e) => {
-        if (e.target === modal || e.target.getAttribute('data-close') == 'close') {
+        if (e.target === modal || e.target.getAttribute('data-close') == '') {
             closeModal();
         };
     });
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         render() {
             const element = document.createElement('div');
-            if(this.classes.length <= 0) {
+            if (this.classes.length <= 0) {
                 this.element = 'menu__item';
                 element.classList.add(this.element);
             } else {
@@ -249,9 +249,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Создаём объект с сообщениями для пользователя */
     const message = {
-        loading : 'img/form/spinner.svg',
-        success : 'Спасибо! Скоро мы с вами свяжемся.',
-        failure   : 'Что-то пошло не так...'
+        loading: 'img/form/spinner.svg',
+        success: 'Спасибо! Скоро мы с вами свяжемся.',
+        failure: 'Что-то пошло не так...'
     };
 
     /* Подвязываем каждую форму к функции запроса */
@@ -278,53 +278,38 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             form.insertAdjacentElement('afterend', statusMessage);
 
-
-            /* Создаём концепцию запроса */
-            const request = new XMLHttpRequest;
-
-            /* Передаём настройки запроса */
-            request.open('POST', 'server.php');
-
-            /* 
-                Http заголовок для FormData
-                request.setRequestHeader = ('Content-type', 'multipart/form-data');
-                Если мы используем связку XMLHttpRequest + FormData - ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО.
-            */
-            request.setRequestHeader = ('Content-type', 'application/json');
-
             /* 
                 Создаём концепцию FormData которая будет собирать данные из формы которую мы передаём как аргумент 
                 (ОСТОРОЖНО!!! МЫ ВСЕГДА ДОЛЖНЫ УКАЗЫВАТЬ У ИНПУТОВ АТРИБУТ name!!!)
             */
             const formData = new FormData(form);
 
-            /* Строки 293, 302-310 преобразовывают данные в JSON */
             const object = {};
-            formData.forEach(function(value, key) {
+            formData.forEach(function (value, key) {
                 object[key] = value;
             });
 
-            const json = JSON.stringify(object);
-
-            /* Метод отправки send принимает в себя formData которая собрала данные из аргумента form. Или JSON после преобразования. */
-            request.send(json);
-
-            /* Событие отслеживает конечную стадию запроса */
-            request.addEventListener('load', () => {
-                /* Проверяем что запрос успешный */
-                if(request.status === 200) {
-                    console.log(request.response);
-                    /* Меняем статус сообщение для пользователя */
-                    showThanksModal(message.success) ;
-                    /* Очищаем форму */
-                    form.reset();
-                    /* Удаляем оповещение о загрузке */
+            // Заменяем XMLHtttpRequest на Fetch
+            fetch('server1.php', {
+                    method: "POST",
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify(object)
+                })
+                .then(data => data.text())
+                .then(data => {
+                    console.log(data);
+                    showThanksModal(message.success);
                     statusMessage.remove()
-
-                } else {
+                })
+                .catch(() => {
                     showThanksModal(message.failure);
-                }
-            });
+                })
+                .finally(() => {
+                    form.reset();
+                });
+
         });
     };
 
