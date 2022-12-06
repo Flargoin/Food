@@ -64,9 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
             seconds = 0
         } else {
             days = Math.floor(t / (1000 * 60 * 60 * 24)),
-                hours = Math.floor((t / (1000 * 60 * 60) % 24)),
-                minutes = Math.floor((t / 1000 / 60) % 60),
-                seconds = Math.floor((t / 1000) % 60);
+            hours = Math.floor((t / (1000 * 60 * 60) % 24)),
+            minutes = Math.floor((t / 1000 / 60) % 60),
+            seconds = Math.floor((t / 1000) % 60);
         }
 
         return {
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Модальное окно */
     const modal = document.querySelector('.modal'),
-        modalTrigger = document.querySelectorAll('[data-modal]');
+          modalTrigger = document.querySelectorAll('[data-modal]');
 
     function openModal() {
         modal.classList.add('show');
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         render() {
             const element = document.createElement('div');
-            if (this.classes.length <= 0) {
+            if(this.classes.length <= 0) {
                 this.element = 'menu__item';
                 element.classList.add(this.element);
             } else {
@@ -212,36 +212,32 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    new MenuCard(
-        "img/tabs/vegy.jpg",
-        "vegy",
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        8,
-        '.menu .container',
-    ).render();
+    const getResource = async (url) => {
+        const res = await fetch(url);
+        /* 
+            Если fetch сталкивается с ошибкой в http статусе, это не будет ошибкой для fetch
+            Ошибки для fetch:
+            1) Отсутствие интернета
+            2) критические неполадки в самом запросе.
 
-    new MenuCard(
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню “Премиум”',
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        12,
-        '.menu .container',
-        'menu__item'
-    ).render();
+            свойства промиса fetch:
+            .ok - запрос выполнился и мы что-то получили
+            .status - получаем http статус 200, 404, 501
+        */
+        if(!res.ok) {
+           throw new Error(`Could not fetch ${url}, status: ${res.status}`)
+        }
 
-    new MenuCard(
-        "img/tabs/post.jpg",
-        "post",
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        10,
-        '.menu .container',
-        'menu__item'
-    ).render();
+        return await res.json();
+    }
 
-
+    /* Переписал код по созданию экземпляров класса */
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({img, altimg, title, descr, price}) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        });
 
     /* Отправка данных из форм */
 
@@ -249,22 +245,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Создаём объект с сообщениями для пользователя */
     const message = {
-        loading: 'img/form/spinner.svg',
-        success: 'Спасибо! Скоро мы с вами свяжемся.',
-        failure: 'Что-то пошло не так...'
+        loading : 'img/form/spinner.svg',
+        success : 'Спасибо! Скоро мы с вами свяжемся.',
+        failure   : 'Что-то пошло не так...'
     };
 
     /* Подвязываем каждую форму к функции запроса */
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
+
+    /* 
+        Создаём функцию для запросов на сервер.
+        Но так как это асинхронный код, нужно немного его доработать (async/await ES8)
+        async - ставится перед функцией
+        await - ставится перед операциями которые необходимо дождаться.
+        Эта конструкция нужна для того чтобы вызывая функцию мы точно увидели результат полученный от сервера.
+    */
+    const postData = async (url, data) => {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: data
+        });
+
+        return await res.json();
+    }
 
 
     /* 
         Создаём функцию которая будет отправлять данные на сервер.
         Передаём в аргумент форму, чтобы потом было удобно навешывать обработчик события.
     */
-    function postData(form) {
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {
             /* Отменяем дефолтное поведение браузера */
             e.preventDefault();
@@ -284,31 +299,21 @@ document.addEventListener("DOMContentLoaded", () => {
             */
             const formData = new FormData(form);
 
-            const object = {};
-            formData.forEach(function (value, key) {
-                object[key] = value;
-            });
+            /* Переделал преобразование в json */
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            // Заменяем XMLHtttpRequest на Fetch
-            fetch('server1.php', {
-                    method: "POST",
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify(object)
-                })
-                .then(data => data.text())
-                .then(data => {
-                    console.log(data);
-                    showThanksModal(message.success);
-                    statusMessage.remove()
-                })
-                .catch(() => {
-                    showThanksModal(message.failure);
-                })
-                .finally(() => {
-                    form.reset();
-                });
+            // Вызываем нашу функцию которая возвращает промис
+            postData('http://localhost:3000/requests', json)
+            .then (data => {
+                showThanksModal(message.success) ;
+                statusMessage.remove()
+            })
+            .catch(() => {
+                showThanksModal(message.failure);
+            })
+            .finally(() => {
+                form.reset();
+            });
 
         });
     };
