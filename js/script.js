@@ -353,57 +353,90 @@ document.addEventListener("DOMContentLoaded", () => {
           prev = document.querySelector('.offer__slider-prev'),
           next = document.querySelector('.offer__slider-next'),
           total = document.querySelector('#total'),
-          current = document.querySelector('#current');
+          current = document.querySelector('#current'),
+          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+          slidesField = document.querySelector('.offer__slider-inner'),
+          // Получаем применённые стили к элементу, в данном случае width   
+          width = window.getComputedStyle(slidesWrapper).width;
 
     // 2) Переменная которая поможет индексировать слайды (Указываем 1 потому что мы выводим это значение для пользователей)
     let slideIndex = 1;
+    // 7) Создаём переменную для отсчёта сдвига карусели
+    let offset = 0;
 
-    // 10) Для работы нужно проинициализировать слайдер
-    showSlides(slideIndex);
-
-    // 11) Нужно менять значение общего числа слайдов (Это нужно прописать 1 раз, так как это общее кол-во слайдов))
+    // 9) 
     if (slides.length < 10) {
         total.textContent = `0${slides.length}`;
+        current.textContent = `0${slideIndex}`;
     } else {
         total.textContent = slides.length;
+        current.textContent = slideIndex;
     }
 
-    // 3) Создаём функцию которая будет показывать слайды (аргумент - индекс)
-    function showSlides(n) {
-        // 4) Нам надо предусмотреть поведение граничных значений индекса
-        if(n > slides.length) {
+    // 3) Установим блоку со слайдами ширину.
+    slidesField.style.width = 100 * slides.length + '%';
+
+    // 4)Помещаем полученное значение width в свойство ширины каждого слайда
+    slides.forEach(slide => {
+        slide.style.width = width;
+    });
+
+    // 5) Прописываем нужные стили для блока со слайдами (позже выведу стили в отдельные классы)
+    slidesField.style.display = 'flex';
+    slidesField.style.transition = '0.5s all';
+
+    // 6) Ограничиваем область контента карусели (чтобы показывать 1 слайд из всех)
+    slidesWrapper.style.overflow = 'hidden';
+
+    // 8) Нужно назначить обработчик события движения карусели
+    next.addEventListener('click', () => {
+        // Проверяем 650px * 3 слайда (не на 4 потому что мы отсчитываем от 0, мы 3 раза листаем добавляя 650, на 4 клик мы возвращаемся в начало)
+        if(offset === +width.slice(0, width.length - 2) * (slides.length - 1)) {
+            console.log(offset);
+            offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2);
+        }
+
+        slidesField.style.transform = `translateX(-${offset}px)`;
+
+        // Если индекс слайда будет равен общему кол-ву слайдов в каруселе - это значит что мы дошли до конца карусели, нужно перейти в начало карусели. Иначе изменять индекс слайда.
+        if(slideIndex === slides.length) {
             slideIndex = 1;
+        } else {
+            slideIndex ++;
         }
-        if(n < 1) {
-            slideIndex = slides.length;
-        }
 
-        // 5) Скрываем слайды
-        slides.forEach(item => item.style.display = 'none');
-
-        // 6) Показать нужный слайд
-        slides[slideIndex - 1].style.display = 'block';
-
-        // 12) Изменять число текущего слайда
-        if (slides.length < 10) {
+        // Также нужно регулировать отображение число индекса
+        if(slides.length < 10) {
             current.textContent = `0${slideIndex}`;
         } else {
             current.textContent = slideIndex;
         }
-    }
-
-    // 7) Функция которая отвечает за перелистывание слайдов
-    function plusSlides(n) {
-        showSlides(slideIndex += n);
-    }
-
-    // 8) Обработчик события на стрелку "Назад"
-    prev.addEventListener('click', () => {
-        plusSlides(-1);
     });
 
-    // 9) Обработчик события на стрелку "Вперёд"
-    next.addEventListener('click', () => {
-        plusSlides(1);
+    prev.addEventListener('click', () => {
+        // Проверяем 650px * 3 слайда (не на 4 потому что мы отсчитываем от 0, мы 3 раза листаем добавляя 650, на 4 клик мы возвращаемся в начало)
+        if(offset === 0) {
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+        } else {
+            offset -= +width.slice(0, width.length - 2);
+        }
+
+        slidesField.style.transform = `translateX(-${offset}px)`;
+
+        // Если индекс слайда будет равен общему кол-ву слайдов в каруселе - это значит что мы дошли до конца карусели, нужно перейти в начало карусели. Иначе изменять индекс слайда.
+        if(slideIndex === 1) {
+            slideIndex = slides.length;
+        } else {
+            slideIndex --;
+        }
+
+        // Также нужно регулировать отображение число индекса
+        if(slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
     });
 });
