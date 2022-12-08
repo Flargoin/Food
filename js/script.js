@@ -350,6 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 1) Получаем элементы со страницы
     const slides = document.querySelectorAll('.offer__slide'),
+          slider = document.querySelector('.offer__slider'),
           prev = document.querySelector('.offer__slider-prev'),
           next = document.querySelector('.offer__slider-next'),
           total = document.querySelector('#total'),
@@ -380,6 +381,31 @@ document.addEventListener("DOMContentLoaded", () => {
     slides.forEach(slide => {
         slide.style.width = width;
     });
+
+    // Устанавливаем относительное позиционирование карусели
+    slider.style.position = 'relative';
+
+    // Создаём обёртку для навигации и даём ему класс со стилями
+    const indicators = document.createElement('ol'),
+          dots = [];
+
+    indicators.classList.add('carousel-indicators');
+    slider.append(indicators);
+
+    // Создаём сами точки и назначаем им атрибут со значениями от 1 до значения slides.length
+    for(let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.classList.add('dot');
+
+        // Если это первый элемент то добавлять стиль
+        if(i == 0) {
+            dot.style.opacity = 1;
+        }
+
+        indicators.append(dot);
+        dots.push(dot);
+    }
 
     // 5) Прописываем нужные стили для блока со слайдами (позже выведу стили в отдельные классы)
     slidesField.style.display = 'flex';
@@ -413,6 +439,10 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             current.textContent = slideIndex;
         }
+
+        // Переюираем каждую точку в массиве dots и делать прозрачной, а точку с индексом слайда делать активной яркой
+        dots.forEach(dot => dot.style.opacity = '0.5');
+        dots[slideIndex - 1].style.opacity = '1';
     });
 
     prev.addEventListener('click', () => {
@@ -438,5 +468,37 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             current.textContent = slideIndex;
         }
+
+        dots.forEach(dot => dot.style.opacity = '0.5');
+        dots[slideIndex - 1].style.opacity = '1';
+    });
+
+    /* 
+        1) Вешаем обработчик события на каждую точку
+        2) Получаем значение атрибута
+        3) Присваиваем его индексу
+        4) Находим отступ ширина * на значение атрибута -1
+        5) Совершаем движение слайда
+        6) Регулируем отображение индекса
+        7) Регулируем работу активной точки  
+    */
+    dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            const slideTo = e.target.getAttribute('data-slide-to');
+
+            slideIndex = slideTo;
+            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+
+            slidesField.style.transform = `translateX(-${offset}px)`;
+
+            if(slides.length < 10) {
+                current.textContent = `0${slideIndex}`;
+            } else {
+                current.textContent = slideIndex;
+            }
+
+            dots.forEach(dot => dot.style.opacity = '0.5');
+            dots[slideIndex - 1].style.opacity = '1';
+        });
     });
 });
