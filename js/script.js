@@ -343,4 +343,67 @@ document.addEventListener("DOMContentLoaded", () => {
             closeModal();
         }, 4000)
     }
+
+
+
+    // Slider
+
+    // 1) Получаем элементы со страницы
+    const slides = document.querySelectorAll('.offer__slide'),
+          prev = document.querySelector('.offer__slider-prev'),
+          next = document.querySelector('.offer__slider-next'),
+          total = document.querySelector('#total'),
+          current = document.querySelector('#current');
+
+    // 2) Переменная которая поможет индексировать слайды (Указываем 1 потому что мы выводим это значение для пользователей)
+    let slideIndex = 1;
+
+    // 10) Для работы нужно проинициализировать слайдер
+    showSlides(slideIndex);
+
+    // 11) Нужно менять значение общего числа слайдов (Это нужно прописать 1 раз, так как это общее кол-во слайдов))
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
+
+    // 3) Создаём функцию которая будет показывать слайды (аргумент - индекс)
+    function showSlides(n) {
+        // 4) Нам надо предусмотреть поведение граничных значений индекса
+        if(n > slides.length) {
+            slideIndex = 1;
+        }
+        if(n < 1) {
+            slideIndex = slides.length;
+        }
+
+        // 5) Скрываем слайды
+        slides.forEach(item => item.style.display = 'none');
+
+        // 6) Показать нужный слайд
+        slides[slideIndex - 1].style.display = 'block';
+
+        // 12) Изменять число текущего слайда
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
+
+    // 7) Функция которая отвечает за перелистывание слайдов
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // 8) Обработчик события на стрелку "Назад"
+    prev.addEventListener('click', () => {
+        plusSlides(-1);
+    });
+
+    // 9) Обработчик события на стрелку "Вперёд"
+    next.addEventListener('click', () => {
+        plusSlides(1);
+    });
 });
