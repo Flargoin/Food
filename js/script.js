@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Модальное окно */
     const modal = document.querySelector('.modal'),
-        modalTrigger = document.querySelectorAll('[data-modal]');
+          modalTrigger = document.querySelectorAll('[data-modal]');
 
     function openModal() {
         modal.classList.add('show');
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         render() {
             const element = document.createElement('div');
-            if (this.classes.length <= 0) {
+            if(this.classes.length <= 0) {
                 this.element = 'menu__item';
                 element.classList.add(this.element);
             } else {
@@ -224,8 +224,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .ok - запрос выполнился и мы что-то получили
             .status - получаем http статус 200, 404, 501
         */
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`)
+        if(!res.ok) {
+           throw new Error(`Could not fetch ${url}, status: ${res.status}`)
         }
 
         return await res.json();
@@ -234,13 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /* Переписал код по созданию экземпляров класса */
     getResource('http://localhost:3000/menu')
         .then(data => {
-            data.forEach(({
-                img,
-                altimg,
-                title,
-                descr,
-                price
-            }) => {
+            data.forEach(({img, altimg, title, descr, price}) => {
                 new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
             });
         });
@@ -251,9 +245,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Создаём объект с сообщениями для пользователя */
     const message = {
-        loading: 'img/form/spinner.svg',
-        success: 'Спасибо! Скоро мы с вами свяжемся.',
-        failure: 'Что-то пошло не так...'
+        loading : 'img/form/spinner.svg',
+        success : 'Спасибо! Скоро мы с вами свяжемся.',
+        failure   : 'Что-то пошло не так...'
     };
 
     /* Подвязываем каждую форму к функции запроса */
@@ -310,16 +304,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Вызываем нашу функцию которая возвращает промис
             postData('http://localhost:3000/requests', json)
-                .then(data => {
-                    showThanksModal(message.success);
-                    statusMessage.remove()
-                })
-                .catch(() => {
-                    showThanksModal(message.failure);
-                })
-                .finally(() => {
-                    form.reset();
-                });
+            .then (data => {
+                showThanksModal(message.success) ;
+                statusMessage.remove()
+            })
+            .catch(() => {
+                showThanksModal(message.failure);
+            })
+            .finally(() => {
+                form.reset();
+            });
 
         });
     };
@@ -356,15 +350,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 1) Получаем элементы со страницы
     const slides = document.querySelectorAll('.offer__slide'),
-        slider = document.querySelector('.offer__slider'),
-        prev = document.querySelector('.offer__slider-prev'),
-        next = document.querySelector('.offer__slider-next'),
-        total = document.querySelector('#total'),
-        current = document.querySelector('#current'),
-        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-        slidesField = document.querySelector('.offer__slider-inner'),
-        // Получаем применённые стили к элементу, в данном случае width   
-        width = window.getComputedStyle(slidesWrapper).width;
+          slider = document.querySelector('.offer__slider'),
+          prev = document.querySelector('.offer__slider-prev'),
+          next = document.querySelector('.offer__slider-next'),
+          total = document.querySelector('#total'),
+          current = document.querySelector('#current'),
+          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+          slidesField = document.querySelector('.offer__slider-inner'),
+          // Получаем применённые стили к элементу, в данном случае width   
+          width = window.getComputedStyle(slidesWrapper).width;
 
     // 2) Переменная которая поможет индексировать слайды (Указываем 1 потому что мы выводим это значение для пользователей)
     let slideIndex = 1;
@@ -393,19 +387,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Создаём обёртку для навигации и даём ему класс со стилями
     const indicators = document.createElement('ol'),
-        dots = [];
+          dots = [];
 
     indicators.classList.add('carousel-indicators');
     slider.append(indicators);
 
     // Создаём сами точки и назначаем им атрибут со значениями от 1 до значения slides.length
-    for (let i = 0; i < slides.length; i++) {
+    for(let i = 0; i < slides.length; i++) {
         const dot = document.createElement('li');
         dot.setAttribute('data-slide-to', i + 1);
         dot.classList.add('dot');
 
         // Если это первый элемент то добавлять стиль
-        if (i == 0) {
+        if(i == 0) {
             dot.style.opacity = 1;
         }
 
@@ -420,27 +414,30 @@ document.addEventListener("DOMContentLoaded", () => {
     // 6) Ограничиваем область контента карусели (чтобы показывать 1 слайд из всех)
     slidesWrapper.style.overflow = 'hidden';
 
+    function deleteNotDigits(str) {
+        return + str.replace(/\D/g, '');
+    }
+
     // 8) Нужно назначить обработчик события движения карусели
     next.addEventListener('click', () => {
         // Проверяем 650px * 3 слайда (не на 4 потому что мы отсчитываем от 0, мы 3 раза листаем добавляя 650, на 4 клик мы возвращаемся в начало)
-        if (offset === +width.slice(0, width.length - 2) * (slides.length - 1)) {
-            console.log(offset);
+        if(offset === deleteNotDigits(width) * (slides.length - 1)) {
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += deleteNotDigits(width);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
 
         // Если индекс слайда будет равен общему кол-ву слайдов в каруселе - это значит что мы дошли до конца карусели, нужно перейти в начало карусели. Иначе изменять индекс слайда.
-        if (slideIndex === slides.length) {
+        if(slideIndex === slides.length) {
             slideIndex = 1;
         } else {
-            slideIndex++;
+            slideIndex ++;
         }
 
         // Также нужно регулировать отображение число индекса
-        if (slides.length < 10) {
+        if(slides.length < 10) {
             current.textContent = `0${slideIndex}`;
         } else {
             current.textContent = slideIndex;
@@ -453,23 +450,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     prev.addEventListener('click', () => {
         // Проверяем 650px * 3 слайда (не на 4 потому что мы отсчитываем от 0, мы 3 раза листаем добавляя 650, на 4 клик мы возвращаемся в начало)
-        if (offset === 0) {
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+        if(offset === 0) {
+            offset = deleteNotDigits(width) * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= deleteNotDigits(width);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
 
         // Если индекс слайда будет равен общему кол-ву слайдов в каруселе - это значит что мы дошли до конца карусели, нужно перейти в начало карусели. Иначе изменять индекс слайда.
-        if (slideIndex === 1) {
+        if(slideIndex === 1) {
             slideIndex = slides.length;
         } else {
-            slideIndex--;
+            slideIndex --;
         }
 
         // Также нужно регулировать отображение число индекса
-        if (slides.length < 10) {
+        if(slides.length < 10) {
             current.textContent = `0${slideIndex}`;
         } else {
             current.textContent = slideIndex;
@@ -479,29 +476,20 @@ document.addEventListener("DOMContentLoaded", () => {
         dots[slideIndex - 1].style.opacity = '1';
     });
 
-    /* 
-        1) Вешаем обработчик события на каждую точку
-        2) Получаем значение атрибута
-        3) Присваиваем его индексу
-        4) Находим отступ ширина * на значение атрибута -1
-        5) Совершаем движение слайда
-        6) Регулируем отображение индекса
-        7) Регулируем работу активной точки  
-    */
     dots.forEach(dot => {
         dot.addEventListener('click', (e) => {
             const slideTo = +e.target.getAttribute('data-slide-to');
 
             slideIndex = slideTo;
-            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+            offset = deleteNotDigits(width) * (slideTo - 1);
 
-            slidesField.style.transform = `translateX(-${offset}px)`;
-
-            if (slides.length < 10) {
+            if(slides.length < 10) {
                 current.textContent = `0${slideIndex}`;
             } else {
                 current.textContent = slideIndex;
             }
+
+            slidesField.style.transform = `translateX(-${offset}px)`;
 
             dots.forEach(dot => dot.style.opacity = '0.5');
             dots[slideIndex - 1].style.opacity = '1';
