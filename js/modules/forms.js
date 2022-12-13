@@ -1,5 +1,16 @@
-import { closeModal, openModal } from "./modal";
-import { postData } from "../services/services";
+import {
+    closeModal,
+    openModal
+} from "./modal";
+import {
+    postData
+} from "../services/services";
+
+/* 
+    1) в функции showThanksModal в вызове closeModal мы передаём селектор
+    2) в функции showThanksModal в вызове openModal мы передаём селектор и уникальный индентификатор таймера
+    3) в form() передаём селектор и modalTimerId пришедшие из script.js
+*/
 
 function forms(formSelector, modalTimerId) {
     const forms = document.querySelectorAll(formSelector);

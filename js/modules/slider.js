@@ -1,4 +1,13 @@
-function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
+function slider({
+    container,
+    slide,
+    nextArrow,
+    prevArrow,
+    totalCounter,
+    currentCounter,
+    wrapper,
+    field
+}) {
     // 1) Получаем элементы со страницы
     const slides = document.querySelectorAll(slide),
         slider = document.querySelector(container),
@@ -69,6 +78,21 @@ function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCo
         return +str.replace(/\D/g, '');
     }
 
+    // Перебираем каждую точку в массиве dots и делать прозрачной, а точку с индексом слайда делать активной яркой
+    function toggleDots() {
+        dots.forEach(dot => dot.style.opacity = '0.5');
+        dots[slideIndex - 1].style.opacity = '1';
+    }
+
+    // Также нужно регулировать отображение число индекса
+    function checkCurrentIndex() {
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
+
     // 8) Нужно назначить обработчик события движения карусели
     next.addEventListener('click', () => {
         // Проверяем 650px * 3 слайда (не на 4 потому что мы отсчитываем от 0, мы 3 раза листаем добавляя 650, на 4 клик мы возвращаемся в начало)
@@ -87,16 +111,8 @@ function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCo
             slideIndex++;
         }
 
-        // Также нужно регулировать отображение число индекса
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
-
-        // Переюираем каждую точку в массиве dots и делать прозрачной, а точку с индексом слайда делать активной яркой
-        dots.forEach(dot => dot.style.opacity = '0.5');
-        dots[slideIndex - 1].style.opacity = '1';
+        checkCurrentIndex();
+        toggleDots();
     });
 
     prev.addEventListener('click', () => {
@@ -116,15 +132,8 @@ function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCo
             slideIndex--;
         }
 
-        // Также нужно регулировать отображение число индекса
-        if (slides.length < 10) {
-            current.textContent = `0${slideIndex}`;
-        } else {
-            current.textContent = slideIndex;
-        }
-
-        dots.forEach(dot => dot.style.opacity = '0.5');
-        dots[slideIndex - 1].style.opacity = '1';
+        checkCurrentIndex();
+        toggleDots();
     });
 
     dots.forEach(dot => {
@@ -133,17 +142,10 @@ function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCo
 
             slideIndex = slideTo;
             offset = deleteNotDigits(width) * (slideTo - 1);
-
-            if (slides.length < 10) {
-                current.textContent = `0${slideIndex}`;
-            } else {
-                current.textContent = slideIndex;
-            }
-
             slidesField.style.transform = `translateX(-${offset}px)`;
 
-            dots.forEach(dot => dot.style.opacity = '0.5');
-            dots[slideIndex - 1].style.opacity = '1';
+            checkCurrentIndex();
+            toggleDots();
         });
     });
 }
