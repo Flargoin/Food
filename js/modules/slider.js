@@ -1,13 +1,13 @@
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
     // 1) Получаем элементы со страницы
-    const slides = document.querySelectorAll('.offer__slide'),
-        slider = document.querySelector('.offer__slider'),
-        prev = document.querySelector('.offer__slider-prev'),
-        next = document.querySelector('.offer__slider-next'),
-        total = document.querySelector('#total'),
-        current = document.querySelector('#current'),
-        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-        slidesField = document.querySelector('.offer__slider-inner'),
+    const slides = document.querySelectorAll(slide),
+        slider = document.querySelector(container),
+        prev = document.querySelector(prevArrow),
+        next = document.querySelector(nextArrow),
+        total = document.querySelector(totalCounter),
+        current = document.querySelector(currentCounter),
+        slidesWrapper = document.querySelector(wrapper),
+        slidesField = document.querySelector(field),
         // Получаем применённые стили к элементу, в данном случае width   
         width = window.getComputedStyle(slidesWrapper).width;
 
@@ -28,7 +28,7 @@ function slider() {
     // 3) Установим блоку со слайдами ширину.
     slidesField.style.width = 100 * slides.length + '%';
 
-    // 4)Помещаем полученное значение width в свойство ширины каждого слайда
+    // 4) Помещаем полученное значение width в свойство ширины каждого слайда
     slides.forEach(slide => {
         slide.style.width = width;
     });
@@ -148,4 +148,4 @@ function slider() {
     });
 }
 
-module.exports = slider;
+export default slider;

@@ -1,7 +1,4 @@
-function timer() {
-    /* Создаём переменную до которой таймер будет отсчитывать */
-    const deadline = '2023-03-17';
-
+function timer(id, deadline) {
     /*
      Создаём функцию которая будет высчитывать разницу между нынешней датой и датой окончания акции :
         1) Создаём переменные для помещение числовых значений.
@@ -79,7 +76,7 @@ function timer() {
         }
     }
 
-    setClock('.timer', deadline);
+    setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;

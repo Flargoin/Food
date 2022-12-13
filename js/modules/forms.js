@@ -1,5 +1,8 @@
-function forms() {
-    const forms = document.querySelectorAll('form');
+import { closeModal, openModal } from "./modal";
+import { postData } from "../services/services";
+
+function forms(formSelector, modalTimerId) {
+    const forms = document.querySelectorAll(formSelector);
 
     /* Создаём объект с сообщениями для пользователя */
     const message = {
@@ -13,24 +16,7 @@ function forms() {
         bindPostData(item);
     });
 
-    /* 
-        Создаём функцию для запросов на сервер.
-        Но так как это асинхронный код, нужно немного его доработать (async/await ES8)
-        async - ставится перед функцией
-        await - ставится перед операциями которые необходимо дождаться.
-        Эта конструкция нужна для того чтобы вызывая функцию мы точно увидели результат полученный от сервера.
-    */
-    const postData = async (url, data) => {
-        const res = await fetch(url, {
-            method: "POST",
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: data
-        });
 
-        return await res.json();
-    }
 
 
     /* 
@@ -63,6 +49,7 @@ function forms() {
             // Вызываем нашу функцию которая возвращает промис
             postData('http://localhost:3000/requests', json)
                 .then(data => {
+                    console.log(data);
                     showThanksModal(message.success);
                     statusMessage.remove()
                 })
@@ -83,7 +70,7 @@ function forms() {
         prevModalDialog.classList.add('hide');
 
         /* Создаём новую структуру окна */
-        openModal();
+        openModal('.modal', modalTimerId);
         const thanksModal = document.createElement('div');
         thanksModal.classList.add('modal__dialog');
         thanksModal.innerHTML = `
@@ -98,9 +85,9 @@ function forms() {
         setTimeout(() => {
             thanksModal.remove();
             prevModalDialog.classList.remove('hide');
-            closeModal();
+            closeModal('.modal');
         }, 4000)
     }
 }
 
-module.exports = forms;
+export default forms;
