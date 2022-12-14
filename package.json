@@ -8,8 +8,32 @@
   },
   "author": "Romanov Sergey",
   "license": "ISC",
+  "browserslist": [
+    "> 0.5%",
+    "ie 11",
+    "ie 10",
+    "ie 9",
+    "ie 8"
+  ],
   "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
     "json-server": "^0.17.1",
     "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "babel-loader": "^9.1.0",
+    "core-js": "^3.26.1",
+    "dom-node-polyfills": "^1.0.0",
+    "es6-promise": "^4.2.8",
+    "fetch-blob": "^3.2.0",
+    "fetch-polyfill": "^0.8.2",
+    "formdata-polyfill": "^4.0.10",
+    "node-fetch": "^3.3.0",
+    "nodelist-foreach-polyfill": "^1.2.0",
+    "polyfill-nodelist-foreach": "^1.1.2",
+    "whatwg-fetch": "^3.6.2"
   }
 }
