@@ -100,6 +100,22 @@ function calc() {
 
     }
 
+    function btnShortText() {
+        const low = document.querySelector('#low'),
+              middleLow = document.querySelector('#middle-low'),
+              middleHigh = document.querySelector('#middle-high'),
+              high = document.querySelector('#high'),
+              calcBlock = document.querySelector('.calculating');
+
+        if(calcBlock.clientWidth < 992) {
+            low.textContent = 'Низкая';
+            middleLow.textContent = 'Невысокая';
+            middleHigh.textContent = 'Умеренная';
+            high.textContent = 'Высокая';
+        }
+    }
+
+    btnShortText();
     getDynamicInformation('#height');
     getDynamicInformation('#weight');
     getDynamicInformation('#age');

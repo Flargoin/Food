@@ -9,19 +9,27 @@
 </head>
 <body>
     <header class="header">
-        <div class="header__left-block">
-            <div class="header__logo">
-                <img src="icons/logo.svg" alt="Логотип">
-            </div>
-            <nav class="header__links">
-                <a href="#" class="header__link">Доставка питания</a>
-                <a href="#" class="header__link">Второй пункт</a>
-            </nav>
+        <div class="header__burger">
+            <span></span>
         </div>
-        <div class="header__right-block">
-            <button data-modal class="btn btn_white">Связаться с нами</button>
+
+        <div class="header__menu">
+            <div class="header__close">&#10006;</div>
+            <div class="header__left-block">
+                <div class="header__logo">
+                    <img src="icons/logo.svg" alt="Логотип">
+                </div>
+                <nav class="header__links">
+                    <a href="#calculating" class="header__link">Калькулятор калорий</a>
+                    <a href="#menu" class="header__link">Меню на день</a>
+                </nav>
+            </div>
+            <div class="header__right-block">
+                <button data-modal class="btn btn_white">Связаться с нами</button>
+            </div>
         </div>
     </header>
+
     <div class="sidepanel">
         <div class="sidepanel__text"><span>Социальные сети</span></div>
         <div class="sidepanel__divider"></div>
@@ -33,7 +41,7 @@
         </a>
     </div>
 
-    <div class="preview">
+    <div id="preview" class="preview">
         <div class="bgc_blue"></div>
         <div class="container">
             <div class="tabcontainer">
@@ -77,7 +85,7 @@
 
     <div class="divider"></div>
 
-    <div class="offer">
+    <div id="offer" class="offer">
         <div class="bgc_y"></div>
         <div class="container">
             <div class="offer__text">
@@ -135,7 +143,7 @@
 
     <div class="divider"></div>
 
-    <div class="calculating">
+    <div id="calculating" class="calculating">
         <div class="container">
             <h2 class="title">Рассчитаем вашу потребность в калориях?
             </h2>
@@ -161,10 +169,10 @@
                     Выберите вашу физическая активность
                 </div>
                 <div class="calculating__choose calculating__choose_big">
-                    <div data-ratio="1.2" class="calculating__choose-item">Низкая активность </div>
-                    <div data-ratio="1.375" class="calculating__choose-item calculating__choose-item_active">Невысокая активность</div>
-                    <div data-ratio="1.55" class="calculating__choose-item">Умеренная активность</div>
-                    <div data-ratio="1.725" class="calculating__choose-item">Высокая активность</div>
+                    <div id="low" data-ratio="1.2" class="calculating__choose-item">Низкая активность </div>
+                    <div id="middle-low" data-ratio="1.375" class="calculating__choose-item calculating__choose-item_active">Невысокая активность</div>
+                    <div id="middle-high" data-ratio="1.55" class="calculating__choose-item">Умеренная активность</div>
+                    <div id="high" data-ratio="1.725" class="calculating__choose-item">Высокая активность</div>
                 </div>
 
                 <div class="calculating__divider"></div>
@@ -183,7 +191,7 @@
 
     <div class="divider"></div>
 
-    <div class="menu">
+    <div id="menu" class="menu">
         <h2 class="title">Наше меню на день</h2>
 
         <div class="menu__field">
@@ -207,7 +215,7 @@
 
     <div class="divider"></div>
 
-    <div class="promotion">
+    <div id="promotion" class="promotion">
         <div class="bgc_y"></div>
         <div class="container">
             <div class="promotion__text">

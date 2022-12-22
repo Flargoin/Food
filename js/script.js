@@ -2,7 +2,7 @@
 require('es6-promise').polyfill();
 import 'nodelist-foreach-polyfill';
 import 'dom-node-polyfills';
-import 'node-fetch';
+import 'fetch-polyfill';
 import 'formdata-polyfill';
 
 import tabs from './modules/tabs';
@@ -15,6 +15,7 @@ import slider from './modules/slider';
 import {
     openModal
 } from './modules/modal';
+import burgerMenu from './modules/burgerMenu';
 
 /* Событие которое ждёт прогрузки DOM */
 document.addEventListener("DOMContentLoaded", () => {
@@ -52,4 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
         wrapper: '.offer__slider-wrapper',
         field: '.offer__slider-inner',
     });
+    burgerMenu();
+    
 });
